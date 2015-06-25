@@ -3,9 +3,9 @@ package Algorithm;
 import java.util.*;
 
 public class Graph {
-    private int num;                // Number of graph nodes
-    private int[][] graph;          // Adjacency matrix with weights
-    private boolean[][] links;      // Adjacency matrix with links only. We'll use Warshall algorithm to it.
+    public int num;                // Number of graph nodes
+    public int[][] graph;          // Adjacency matrix with weights
+    public boolean[][] links;      // Adjacency matrix with links only. We'll use Warshall algorithm to it.
                                     // There would be nodes list
 
     public Graph(int n){            // Constructor
