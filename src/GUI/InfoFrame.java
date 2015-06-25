@@ -10,11 +10,7 @@ import java.awt.event.WindowEvent;
 // окно "информация об алгоритме"
 public class InfoFrame extends JFrame implements ActionListener {
 
-    private final MainMenuFrame mainMenuFrame;
-    private JButton backButton;
-    private ImageIcon iconImage;
-    private ImageIcon infoImage;
-    private JScrollPane panel;
+    private final MainMenuFrame mainMenuFrame; // главное окно
 
     // конструктор
     public InfoFrame(MainMenuFrame frame) {
@@ -24,16 +20,9 @@ public class InfoFrame extends JFrame implements ActionListener {
 
         // окно
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setPreferredSize(new Dimension(600, 400));
+        setPreferredSize(new Dimension(800, 600));
         setResizable(false);
         setLayout(null);
-
-        // центрирование окна
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        JLabel emptyLabel = new JLabel("");
-        emptyLabel.setPreferredSize(new Dimension( (int)dimension.getWidth() / 2, (int)dimension.getHeight()/2 ));
-        getContentPane().add(emptyLabel, BorderLayout.CENTER);
-        setLocation((int) dimension.getWidth() / 4, (int) dimension.getHeight()/4);
 
         // закрытие окна
         addWindowListener(new WindowListener() {
@@ -50,37 +39,39 @@ public class InfoFrame extends JFrame implements ActionListener {
         });
 
         // иконка
-        iconImage = new ImageIcon("src/images/icon.png");
-        setIconImage(iconImage.getImage());
+        ImageIcon icon = new ImageIcon("src/images/icon.png");
+        setIconImage(icon.getImage());
 
         // кнопка
-        backButton = new JButton("В главное меню");
-        backButton.setBounds(175, 306, 250, 60);
+        JButton backButton = new JButton("В главное меню");
+        backButton.setBounds(250, 480, 300, 60);
         backButton.setFont(new Font("Arial", Font.BOLD, 14));
         backButton.addActionListener(this);
-        backButton.setActionCommand("Back");
+        backButton.setActionCommand("BackButton");
         add(backButton);
 
         // картинка с информацией об алгоритме
-        infoImage = new ImageIcon("src/images/info.png");
+        ImageIcon infoImage = new ImageIcon("src/images/info.png");
         // панель с прокруткой
-        panel = new JScrollPane(new JLabel(infoImage));
+        JScrollPane panel = new JScrollPane(new JLabel(infoImage));
         panel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        panel.setBounds(0, 0, 600, 300);
+        panel.setBounds(0, 0, 800, 450);
         // скорость прокрутки
         JScrollBar jsp = panel.getVerticalScrollBar();
         jsp.setUnitIncrement(25);
         add(panel);
 
         pack();
+        setLocationRelativeTo(null); // центрирование окна
         setVisible(true);
     }
 
+    // нажатие кнопки
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
 
-        if(cmd.equals("Back")) {
+        if(cmd.equals("BackButton")) {
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             mainMenuFrame.setVisible(true);
         }
