@@ -25,8 +25,7 @@ public class MainMenuFrame extends JFrame implements ActionListener {
         setLayout(null);
 
         // иконка
-        ImageIcon icon = new ImageIcon("src/images/icon.png");
-        setIconImage(icon.getImage());
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/icon.png")));
 
         // картинка для заголовка
         JPanel titlePanel = new JPanel();
@@ -34,15 +33,12 @@ public class MainMenuFrame extends JFrame implements ActionListener {
         TitledBorder title = BorderFactory.createTitledBorder("");
         titlePanel.setBorder(title);
         titlePanel.setBounds(20, 20, 760, 207);
-        try {
-            BufferedImage titleImage = ImageIO.read(new File("src/images/title.png"));
-            JLabel picLabel = new JLabel(new ImageIcon(titleImage));
-            picLabel.setBounds(0, 0, 760, 200);
-            titlePanel.add(picLabel);
-        } catch (IOException e) {
-            String message = "Error while loading title.png!";
-            JOptionPane.showMessageDialog(null, message);
-        }
+
+        Image img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/title.png"));
+        JLabel picLabel = new JLabel(new ImageIcon(img));
+        picLabel.setBounds(0, 0, 760, 200);
+        titlePanel.add(picLabel);
+
         getContentPane().add(titlePanel); // добавление заголовка на окно
 
         // панель для кнопок

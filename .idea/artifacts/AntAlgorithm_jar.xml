@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AntAlgorithm:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AntAlgorithm_jar</output-path>
+    <root id="archive" name="AntAlgorithm.jar">
+      <element id="module-output" name="AntAlgorithm" />
+    </root>
+  </artifact>
+</component>

@@ -67,8 +67,7 @@ public class ParametersFrame extends JFrame
         });
 
         // иконка
-        ImageIcon icon = new ImageIcon("src/images/icon.png");
-        setIconImage(icon.getImage());
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/icon.png")));
 
         // панель Ввод графа
         JPanel enterGraphPanel = new JPanel();

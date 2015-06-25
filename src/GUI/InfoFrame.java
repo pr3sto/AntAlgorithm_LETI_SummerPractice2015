@@ -39,8 +39,7 @@ public class InfoFrame extends JFrame implements ActionListener {
         });
 
         // иконка
-        ImageIcon icon = new ImageIcon("src/images/icon.png");
-        setIconImage(icon.getImage());
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/icon.png")));
 
         // кнопка
         JButton backButton = new JButton("В главное меню");
@@ -51,7 +50,8 @@ public class InfoFrame extends JFrame implements ActionListener {
         add(backButton);
 
         // картинка с информацией об алгоритме
-        ImageIcon infoImage = new ImageIcon("src/images/info.png");
+        Image img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/info.png"));
+        ImageIcon infoImage = new ImageIcon(img);
         // панель с прокруткой
         JScrollPane panel = new JScrollPane(new JLabel(infoImage));
         panel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
