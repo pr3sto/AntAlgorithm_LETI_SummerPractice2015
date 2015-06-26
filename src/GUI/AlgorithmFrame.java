@@ -152,6 +152,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
             // combo box
             case "StartVertexComboBox":
                 break;
+
             case "EndVertexComboBox":
                 break;
 
@@ -159,12 +160,15 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
             case "NextStepButton":
                 disableComboBoxes();
                 break;
+
             case "AutoStepButton":
                 disableComboBoxes();
                 break;
+
             case "ClearButton":
                 enableComboBoxes();
                 break;
+
             case "BackButton":
                 dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
                 mainMenuFrame.setVisible(true);

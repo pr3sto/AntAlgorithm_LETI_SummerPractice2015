@@ -7,8 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
+import Algorithm.Graph;
+import Algorithm.Pair;
+
 // окно "главное меню"
 public class MainMenuFrame extends JFrame implements ActionListener {
+
+    private Graph graph = new Graph();                      // граф
+    private Pair<Double, Double> params = new Pair<> (0.5,  // жадность
+                                                      0.5); // скорость испарения феромонов
 
     // конструктор
     public MainMenuFrame() {
@@ -28,7 +35,7 @@ public class MainMenuFrame extends JFrame implements ActionListener {
         titlePanel.setLayout(null);
         TitledBorder title = BorderFactory.createTitledBorder("");
         titlePanel.setBorder(title);
-        titlePanel.setBounds(20, 20, 760, 207);
+        titlePanel.setBounds(20, 20, 760, 206);
 
         Image img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/images/title.png"));
         JLabel picLabel = new JLabel(new ImageIcon(img));
@@ -76,10 +83,10 @@ public class MainMenuFrame extends JFrame implements ActionListener {
         exitButton.addActionListener(this);
         buttonPanel.add(exitButton);
 
-        getContentPane().add(buttonPanel);// добавление панели на окно
+        getContentPane().add(buttonPanel); // добавление панели на окно
 
         pack();
-        setLocationRelativeTo(null); // центрирование окна
+        setLocationRelativeTo(null);       // центрирование окна
         setVisible(true);
     }
 
@@ -96,7 +103,7 @@ public class MainMenuFrame extends JFrame implements ActionListener {
                 break;
 
             case "ParametersButton":
-                new ParametersFrame(this);
+                new ParametersFrame(this, graph, params);
                 setVisible(false);
                 dispose();
                 break;
@@ -124,8 +131,8 @@ public class MainMenuFrame extends JFrame implements ActionListener {
             try {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
             } catch (Exception e1) {
-                String message = "Error while changing Look and Feel!";
-                JOptionPane.showMessageDialog(null, message);
+                JOptionPane.showMessageDialog(null,
+                        "Error while changing Look and Feel!", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
             // показать главное окно

@@ -1,9 +1,8 @@
 package Algorithm;
 
 import java.util.*;
-import java.math.*;
 
-public class AntAlg {
+public class AntAlgorithm {
     private Graph field;                // graph
     private List<Edge> edges;           // edges list
     private double greed;               // жадность алгоритма - больше вли€ет длина ребра
@@ -14,7 +13,7 @@ public class AntAlg {
     private int finishIndex;            // finish node index
     private int currentIndex;           // current node index
 
-    public AntAlg(Graph fld, double k, double p, int start, int finish){    // constructor
+    public AntAlgorithm(Graph fld, double k, double p, int start, int finish){    // constructor
         field = fld;
         count = 0;
         startIndex = start;
@@ -35,10 +34,10 @@ public class AntAlg {
             evaporationSpeed = 0.5;
 
         // initialisation of edges list
-        for (int i = 0; i < field.num; ++i)
-            for (int j = i; j < field.num; ++j)
-                if ( field.graph[i][j] != 0){
-                    edges.add(new Edge(field.graph[i][j], i, j));
+        for (int i = 0; i < field.numberOfVertices; ++i)
+            for (int j = i; j < field.numberOfVertices; ++j)
+                if ( field.adjacencyMatrix[i][j] != 0){
+                    edges.add(new Edge(field.adjacencyMatrix[i][j], i, j));
                 }
     }
 
@@ -51,8 +50,8 @@ public class AntAlg {
             while (currentIndex != finishIndex){            // while ant not find finish
                 List<Integer> possibleNN = new ArrayList<>();   // list of possible next nodes
 
-                for (int i = 0; i < field.num; ++i)
-                    if (field.graph[currentIndex][i] != 0) {
+                for (int i = 0; i < field.numberOfVertices; ++i)
+                    if (field.adjacencyMatrix[currentIndex][i] != 0) {
                         boolean ok = true;                  // true if an ant not been in possible next node
                         for (int j = 0; j < wayN.size(); ++j)
                             if (i == wayN.get(j))
@@ -97,8 +96,8 @@ public class AntAlg {
                 List<Integer> possibleNN = new ArrayList<>();   // list of possible next nodes
                 List<Edge> possibleNE = new ArrayList<>();      // list of possible next edges
 
-                for (int i = 0; i < field.num; ++i)
-                    if (field.graph[currentIndex][i] != 0){
+                for (int i = 0; i < field.numberOfVertices; ++i)
+                    if (field.adjacencyMatrix[currentIndex][i] != 0){
                         boolean ok = true;                  // true if an ant not been in possible next node
                         for (int j = 0; j < wayN.size(); ++j)
                             if (i == wayN.get(j))

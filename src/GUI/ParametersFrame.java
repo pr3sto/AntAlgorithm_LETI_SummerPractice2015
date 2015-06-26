@@ -1,6 +1,7 @@
 package GUI;
 
 import java.io.*;
+import java.util.*;
 import java.text.NumberFormat;
 import java.util.Hashtable;
 import javax.swing.*;
@@ -14,18 +15,32 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import Algorithm.Graph;
+import Algorithm.Pair;
+
 // окно "Параметры"
 public class ParametersFrame extends JFrame
         implements ActionListener, ChangeListener, PropertyChangeListener {
 
-    private final MainMenuFrame mainMenuFrame; // главное окно
+
+    private final MainMenuFrame mainMenuFrame;    // главное окно
+    private Pair<Double, Double> params;          // параметры (жадность, скорость испарения)
+    private Graph graph;
+
+
+    // параметры генерации
+    private int numberOfVertices = 5;             // количестов вершин
+    private int percentOfEdges = 50;              // процент ребер
+    private Pair<Integer, Integer> rangeOfWeights
+                        = new Pair<>(1,100);      // диапозон весов
+
 
     // группа "из файла"
     private JFileChooser fileChooser;
     private File file;
     private JTextField filePathTextField;
     private JButton chooseFileButton;
-
+    private JButton createGraphFromFileButton;
     // группа "генерация"
     private JLabel numberOfVerticesLabel;
     private JSlider numberOfVerticesSlider;
@@ -36,15 +51,21 @@ public class ParametersFrame extends JFrame
     private JLabel rangeToLabel;
     private JFormattedTextField rangeFromField;
     private JFormattedTextField rangeToField;
-
+    private JButton createGraphGenerateButton;
     // группа "ручной ввод"
     private JButton handEnterGraphButton;
 
+    // кнопка "показать граф"
+    private JButton showGraphButton;
+
+
     // конструктор
-    public ParametersFrame(MainMenuFrame frame) {
+    public ParametersFrame(MainMenuFrame frame, Graph graph_, Pair<Double, Double> params_) {
         super("Параметры");
 
         mainMenuFrame = frame;
+        params = params_;
+        graph = graph_;
 
         // окно
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -79,7 +100,7 @@ public class ParametersFrame extends JFrame
         // кнопки выбора ввода
         JRadioButton fromFileRadioButton = new JRadioButton("Из файла:");
         fromFileRadioButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        fromFileRadioButton.setBounds(20, 40, 100, 20);
+        fromFileRadioButton.setBounds(20, 40, 90, 20);
         fromFileRadioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         fromFileRadioButton.setActionCommand("FromFileRadioButton");
         fromFileRadioButton.addActionListener(this);
@@ -87,14 +108,14 @@ public class ParametersFrame extends JFrame
 
         JRadioButton generateGraphRadioButton = new JRadioButton("Генерация:");
         generateGraphRadioButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        generateGraphRadioButton.setBounds(20, 90, 100, 20);
+        generateGraphRadioButton.setBounds(20, 85, 100, 20);
         generateGraphRadioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         generateGraphRadioButton.setActionCommand("GenerateRadioButton");
         generateGraphRadioButton.addActionListener(this);
 
         JRadioButton handEnterGraphRadioButton = new JRadioButton("Ручной ввод:");
         handEnterGraphRadioButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        handEnterGraphRadioButton.setBounds(20, 240, 150, 20);
+        handEnterGraphRadioButton.setBounds(20, 240, 110, 20);
         handEnterGraphRadioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         handEnterGraphRadioButton.setActionCommand("HandEnterRadioButton");
         handEnterGraphRadioButton.addActionListener(this);
@@ -123,20 +144,29 @@ public class ParametersFrame extends JFrame
         enterGraphPanel.add(chooseFileButton);
 
         filePathTextField = new JTextField("Путь к файлу . . .");
-        filePathTextField.setBounds(310, 35, 430, 30);
+        filePathTextField.setBounds(310, 35, 260, 30);
         filePathTextField.setEditable(false);
         filePathTextField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         enterGraphPanel.add(filePathTextField);
+
+        createGraphFromFileButton = new JButton("Создать граф");
+        createGraphFromFileButton.setFont(new Font("Arial", Font.BOLD, 14));
+        createGraphFromFileButton.setBounds(590, 30, 150, 40);
+        createGraphFromFileButton.setActionCommand("CreateGraphFromFileButton");
+        createGraphFromFileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        createGraphFromFileButton.addActionListener(this);
+        createGraphFromFileButton.setEnabled(false);
+        enterGraphPanel.add(createGraphFromFileButton);
 
 
         // генерация
         numberOfVerticesLabel = new JLabel("Количество вершин:");
         numberOfVerticesLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        numberOfVerticesLabel.setBounds(140, 80, 200, 40);
+        numberOfVerticesLabel.setBounds(140, 75, 140, 40);
         enterGraphPanel.add(numberOfVerticesLabel);
         // слайдер - количество вершин
-        numberOfVerticesSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, 5);
-        numberOfVerticesSlider.setBounds(310, 90, 425, 40);
+        numberOfVerticesSlider = new JSlider(JSlider.HORIZONTAL, 2, 10, numberOfVertices);
+        numberOfVerticesSlider.setBounds(310, 85, 425, 40);
         numberOfVerticesSlider.setMajorTickSpacing(1);
         numberOfVerticesSlider.setMinorTickSpacing(1);
         numberOfVerticesSlider.setPaintTicks(true);
@@ -150,10 +180,10 @@ public class ParametersFrame extends JFrame
 
         percentOfEdgesLabel = new JLabel("Процент ребер:");
         percentOfEdgesLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        percentOfEdgesLabel.setBounds(140, 130, 200, 40);
+        percentOfEdgesLabel.setBounds(140, 130, 120, 40);
         enterGraphPanel.add(percentOfEdgesLabel);
         // слайдер - процент ребер
-        percentOfEdgesSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        percentOfEdgesSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, percentOfEdges);
         percentOfEdgesSlider.setBounds(310, 140, 425, 40);
         percentOfEdgesSlider.setMajorTickSpacing(10);
         percentOfEdgesSlider.setMinorTickSpacing(5);
@@ -166,27 +196,28 @@ public class ParametersFrame extends JFrame
         percentOfEdgesSlider.addChangeListener(this);
         enterGraphPanel.add(percentOfEdgesSlider);
 
-        // ----------------------------
+        // ----- форматтер ввода ------
         NumberFormat nf = NumberFormat.getIntegerInstance();
         NumberFormatter nff= new NumberFormatter(nf);
-        nff.setMinimum(0);
+        nff.setMinimum(1);
         nff.setMaximum(100);
         // ----------------------------
 
+        // поля - диапозон весов
         rangeOfWeightsLabel = new JLabel("Диапозон весов:");
         rangeOfWeightsLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        rangeOfWeightsLabel.setBounds(140, 180, 200, 40);
+        rangeOfWeightsLabel.setBounds(140, 185, 120, 40);
         enterGraphPanel.add(rangeOfWeightsLabel);
-        // поля - диапозон весов
+
         // от
         rangeFromLabel = new JLabel("От:");
         rangeFromLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        rangeFromLabel.setBounds(310, 180, 200, 40);
+        rangeFromLabel.setBounds(310, 185, 30, 40);
         enterGraphPanel.add(rangeFromLabel);
 
         rangeFromField = new JFormattedTextField(nff);
-        rangeFromField.setValue(0);
-        rangeFromField.setBounds(360, 185, 100, 30);
+        rangeFromField.setValue(rangeOfWeights.first);
+        rangeFromField.setBounds(340, 190, 50, 30);
         rangeFromField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         rangeFromField.setName("RangeFromField");
         rangeFromField.addPropertyChangeListener(this);
@@ -195,16 +226,25 @@ public class ParametersFrame extends JFrame
         // до
         rangeToLabel = new JLabel("До:");
         rangeToLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        rangeToLabel.setBounds(515, 180, 200, 40);
+        rangeToLabel.setBounds(420, 185, 30, 40);
         enterGraphPanel.add(rangeToLabel);
 
         rangeToField = new JFormattedTextField(nff);
-        rangeToField.setValue(100);
-        rangeToField.setBounds(565, 185, 100, 30);
+        rangeToField.setValue(rangeOfWeights.second);
+        rangeToField.setBounds(450, 190, 50, 30);
         rangeToField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         rangeToField.setName("RangeToField");
         rangeToField.addPropertyChangeListener(this);
         enterGraphPanel.add(rangeToField);
+
+        // кнопка "создать граф"
+        createGraphGenerateButton = new JButton("Создать граф");
+        createGraphGenerateButton.setFont(new Font("Arial", Font.BOLD, 14));
+        createGraphGenerateButton.setBounds(590, 185, 150, 40);
+        createGraphGenerateButton.setActionCommand("CreateGraphGenerateButton");
+        createGraphGenerateButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        createGraphGenerateButton.addActionListener(this);
+        enterGraphPanel.add(createGraphGenerateButton);
 
 
         // ручной ввод
@@ -224,23 +264,25 @@ public class ParametersFrame extends JFrame
         TitledBorder panelTitle = BorderFactory.createTitledBorder("Дополнительные параметры:");
         paramsPanel.setBorder(panelTitle);
 
-        // ----------------------------
+        // --- для шкалы  слайдеров ---
         Hashtable labelTable = new Hashtable();
-        labelTable.put( 0, new JLabel("0.0") );
-        labelTable.put( 5, new JLabel("0.5") );
-        labelTable.put( 10, new JLabel("1.0") );
+        labelTable.put(0, new JLabel("0.0"));
+        labelTable.put(50, new JLabel("0.5"));
+        labelTable.put(100, new JLabel("1.0"));
         // ----------------------------
 
         JLabel greedOfAlgorithmLabel = new JLabel("\"Жадность\" алгоритма:");
         greedOfAlgorithmLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        greedOfAlgorithmLabel.setBounds(20, 20, 200, 40);
+        greedOfAlgorithmLabel.setBounds(20, 20, 160, 40);
         paramsPanel.add(greedOfAlgorithmLabel);
         // слайдер - жадность алгоритма
-        JSlider greedOfAlgorithmSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, 5);
+        Double tmp = params.first * 100;
+        Integer greedInt = tmp.intValue();
+        JSlider greedOfAlgorithmSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, greedInt);
         greedOfAlgorithmSlider.setBounds(310, 30, 425, 40);
         greedOfAlgorithmSlider.setLabelTable(labelTable);
-        greedOfAlgorithmSlider.setMajorTickSpacing(1);
-        greedOfAlgorithmSlider.setMinorTickSpacing(1);
+        greedOfAlgorithmSlider.setMajorTickSpacing(50);
+        greedOfAlgorithmSlider.setMinorTickSpacing(10);
         greedOfAlgorithmSlider.setPaintTicks(true);
         greedOfAlgorithmSlider.setPaintLabels(true);
         greedOfAlgorithmSlider.setFont(new Font("Arial", Font.PLAIN, 10));
@@ -252,14 +294,16 @@ public class ParametersFrame extends JFrame
 
         JLabel rateOfEvaporationLabel = new JLabel("Скорость испарения феромона:");
         rateOfEvaporationLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        rateOfEvaporationLabel.setBounds(20, 70, 300, 40);
+        rateOfEvaporationLabel.setBounds(20, 70, 220, 40);
         paramsPanel.add(rateOfEvaporationLabel);
         // слайдер - скорость испарения феромона
-        JSlider rateOfEvaporationSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, 5);
+        Double tmp1 = params.second*100;
+        Integer evaporationSpeedInt = tmp1.intValue();
+        JSlider rateOfEvaporationSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, evaporationSpeedInt);
         rateOfEvaporationSlider.setBounds(310, 80, 425, 40);
         rateOfEvaporationSlider.setLabelTable(labelTable);
-        rateOfEvaporationSlider.setMajorTickSpacing(1);
-        rateOfEvaporationSlider.setMinorTickSpacing(1);
+        rateOfEvaporationSlider.setMajorTickSpacing(50);
+        rateOfEvaporationSlider.setMinorTickSpacing(10);
         rateOfEvaporationSlider.setPaintTicks(true);
         rateOfEvaporationSlider.setPaintLabels(true);
         rateOfEvaporationSlider.setFont(new Font("Arial", Font.PLAIN, 10));
@@ -279,9 +323,13 @@ public class ParametersFrame extends JFrame
         backButton.addActionListener(this);
         add(backButton);
 
-        JButton showGraphButton = new JButton("Показать граф");
+        showGraphButton = new JButton("Показать граф");
         showGraphButton.setFont(new Font("Arial", Font.BOLD, 14));
         showGraphButton.setBounds(420, 490, 300, 60);
+        if (!graph.isCreated()) {
+            showGraphButton.setText("Показать граф (нет графа)");
+            showGraphButton.setEnabled(false);
+        }
         showGraphButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         showGraphButton.setActionCommand("ShowGraphButton");
         showGraphButton.addActionListener(this);
@@ -304,6 +352,7 @@ public class ParametersFrame extends JFrame
     private void disableEnterFromFileGraph() {
         chooseFileButton.setEnabled(false);
         filePathTextField.setEnabled(false);
+        createGraphFromFileButton.setEnabled(false);
     }
     private void disableGenerationGraph() {
         numberOfVerticesLabel.setEnabled(false);
@@ -315,6 +364,7 @@ public class ParametersFrame extends JFrame
         rangeToLabel.setEnabled(false);
         rangeFromField.setEnabled(false);
         rangeToField.setEnabled(false);
+        createGraphGenerateButton.setEnabled(false);
     }
     private void disableHandEnterGraph() {
         handEnterGraphButton.setEnabled(false);
@@ -324,6 +374,7 @@ public class ParametersFrame extends JFrame
     private void enableEnterFromFileGraph() {
         chooseFileButton.setEnabled(true);
         filePathTextField.setEnabled(true);
+        if (file != null) createGraphFromFileButton.setEnabled(true);
     }
     private void enableGenerationGraph() {
         numberOfVerticesLabel.setEnabled(true);
@@ -335,6 +386,7 @@ public class ParametersFrame extends JFrame
         rangeToLabel.setEnabled(true);
         rangeFromField.setEnabled(true);
         rangeToField.setEnabled(true);
+        createGraphGenerateButton.setEnabled(true);
     }
     private void enableHandEnterGraph() {
         handEnterGraphButton.setEnabled(true);
@@ -350,15 +402,19 @@ public class ParametersFrame extends JFrame
 
             switch (slider.getName()) {
                 case"NumberOfVerticesSlider":
+                    numberOfVertices = slider.getValue();
                     break;
 
                 case "PercentOfEdgesSlider":
+                    percentOfEdges = slider.getValue();
                     break;
 
                 case "GreedOfAlgorithmSlider":
+                    params.first = new Integer(slider.getValue()).doubleValue()/100;
                     break;
 
                 case "RateOfEvaporationSlider":
+                    params.second = new Integer(slider.getValue()).doubleValue()/100;
                     break;
 
                 default:
@@ -376,6 +432,7 @@ public class ParametersFrame extends JFrame
         switch (field.getName()) {
             case "RangeFromField":
                 try {
+                    rangeOfWeights.first = Integer.parseInt(rangeFromField.getText());
                     if (Integer.parseInt(rangeFromField.getText()) > Integer.parseInt(rangeToField.getText())) {
                         rangeToField.setValue(100);
                     }
@@ -384,8 +441,9 @@ public class ParametersFrame extends JFrame
 
             case "RangeToField":
                 try {
+                    rangeOfWeights.second = Integer.parseInt(rangeToField.getText());
                     if (Integer.parseInt(rangeFromField.getText()) > Integer.parseInt(rangeToField.getText())) {
-                        rangeFromField.setValue(0);
+                        rangeFromField.setValue(1);
                     }
                 } catch (Exception e1) { }
                 break;
@@ -424,7 +482,34 @@ public class ParametersFrame extends JFrame
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     file = fileChooser.getSelectedFile();
                     filePathTextField.setText(file.getPath());
+                    createGraphFromFileButton.setEnabled(true);
                 }
+                break;
+
+            case "CreateGraphFromFileButton":
+                try {
+                    if (graph.createGraphFromFile(new Scanner(file))) {
+                        showGraphButton.setText("Показать граф");
+                        showGraphButton.setEnabled(true);
+
+                        JOptionPane.showMessageDialog(null,
+                                "Граф успешно создан!", "Граф создан", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                                "Невозможно считать граф из файла!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (FileNotFoundException e1) { }
+                break;
+
+            case "CreateGraphGenerateButton":
+                graph.createGraph(numberOfVertices);
+                graph.generateGraph(percentOfEdges, rangeOfWeights.first, rangeOfWeights.second);
+
+                showGraphButton.setText("Показать граф");
+                showGraphButton.setEnabled(true);
+
+                JOptionPane.showMessageDialog(null,
+                        "Граф успешно создан!", "Граф создан", JOptionPane.PLAIN_MESSAGE);
                 break;
 
             case "EnterGraphButton":
