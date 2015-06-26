@@ -7,10 +7,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="edfd4b6f-638e-45f0-ade5-a6b8402a5bad" name="Default" comment="">
+      <change type="DELETED" beforePath="D:\учеба\4 сем\4 сем _ Практика\задание 3\AntAlgorithm\out\production\AntAlgorithm\GUI\icon.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\учеба\4 сем\4 сем _ Практика\задание 3\AntAlgorithm\out\production\AntAlgorithm\GUI\info.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\учеба\4 сем\4 сем _ Практика\задание 3\AntAlgorithm\out\production\AntAlgorithm\GUI\title.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\учеба\4 сем\4 сем _ Практика\задание 3\AntAlgorithm\src\GUI\icon.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\учеба\4 сем\4 сем _ Практика\задание 3\AntAlgorithm\src\GUI\info.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\учеба\4 сем\4 сем _ Практика\задание 3\AntAlgorithm\src\GUI\title.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\учеба\4 сем\4 сем _ Практика\задание 3\AntAlgorithm\src\images\icon.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\учеба\4 сем\4 сем _ Практика\задание 3\AntAlgorithm\src\images\info.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\учеба\4 сем\4 сем _ Практика\задание 3\AntAlgorithm\src\images\title.png" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/AntAlgorithm/GUI/AlgorithmFrame.class" afterPath="$PROJECT_DIR$/out/production/AntAlgorithm/GUI/AlgorithmFrame.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/AntAlgorithm_jar/AntAlgorithm.jar" afterPath="$PROJECT_DIR$/out/artifacts/AntAlgorithm_jar/AntAlgorithm.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/AntAlgorithm/GUI/InfoFrame.class" afterPath="$PROJECT_DIR$/out/production/AntAlgorithm/GUI/InfoFrame.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/AntAlgorithm/GUI/MainMenuFrame.class" afterPath="$PROJECT_DIR$/out/production/AntAlgorithm/GUI/MainMenuFrame.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/AntAlgorithm/GUI/ParametersFrame.class" afterPath="$PROJECT_DIR$/out/production/AntAlgorithm/GUI/ParametersFrame.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUI/AlgorithmFrame.java" afterPath="$PROJECT_DIR$/src/GUI/AlgorithmFrame.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUI/InfoFrame.java" afterPath="$PROJECT_DIR$/src/GUI/InfoFrame.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUI/MainMenuFrame.java" afterPath="$PROJECT_DIR$/src/GUI/MainMenuFrame.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUI/ParametersFrame.java" afterPath="$PROJECT_DIR$/src/GUI/ParametersFrame.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="AntAlgorithm.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,11 +47,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainMenuFrame.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainMenuFrame.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GUI/MainMenuFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3340206">
-              <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="32" column="85" selection-start-line="32" selection-start-column="85" selection-end-line="32" selection-end-column="85" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -48,7 +63,7 @@
         <entry file="file://$PROJECT_DIR$/src/GUI/InfoFrame.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="52" column="8" selection-start-line="52" selection-start-column="8" selection-end-line="53" selection-end-column="49" />
+              <caret line="52" column="85" selection-start-line="52" selection-start-column="85" selection-end-line="52" selection-end-column="85" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -60,7 +75,7 @@
         <entry file="file://$PROJECT_DIR$/src/GUI/ParametersFrame.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="69" column="100" selection-start-line="69" selection-start-column="100" selection-end-line="69" selection-end-column="100" />
+              <caret line="69" column="86" selection-start-line="69" selection-start-column="86" selection-end-line="69" selection-end-column="86" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -68,11 +83,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AlgorithmFrame.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="AlgorithmFrame.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/GUI/AlgorithmFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="47" column="100" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="100" />
+            <state vertical-scroll-proportion="1.6474227">
+              <caret line="47" column="86" selection-start-line="47" selection-start-column="86" selection-end-line="47" selection-end-column="86" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -107,10 +122,10 @@
         <option value="$PROJECT_DIR$/src/GUI/ParametrsFrame.java" />
         <option value="$PROJECT_DIR$/src/GUI/rangeslider/RangeSlider.java" />
         <option value="$PROJECT_DIR$/src/GUI/rangeslider/RangeSliderUI.java" />
+        <option value="$PROJECT_DIR$/src/GUI/MainMenuFrame.java" />
+        <option value="$PROJECT_DIR$/src/GUI/InfoFrame.java" />
         <option value="$PROJECT_DIR$/src/GUI/ParametersFrame.java" />
         <option value="$PROJECT_DIR$/src/GUI/AlgorithmFrame.java" />
-        <option value="$PROJECT_DIR$/src/GUI/InfoFrame.java" />
-        <option value="$PROJECT_DIR$/src/GUI/MainMenuFrame.java" />
       </list>
     </option>
   </component>
@@ -146,6 +161,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
@@ -180,27 +196,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AntAlgorithm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AntAlgorithm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="GUI" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -456,6 +453,46 @@
     <entry file="file://$PROJECT_DIR$/src/GUI/MainMenuFrame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GUI/InfoFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="52" column="8" selection-start-line="52" selection-start-column="8" selection-end-line="53" selection-end-column="49" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GUI/ParametersFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="69" column="100" selection-start-line="69" selection-start-column="100" selection-end-line="69" selection-end-column="100" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GUI/AlgorithmFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="47" column="100" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="100" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GUI/MainMenuFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
           <caret line="116" column="0" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -565,10 +602,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GUI/AlgorithmFrame.java">
+    <entry file="file://$PROJECT_DIR$/src/GUI/MainMenuFrame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="47" column="100" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="100" />
+          <caret line="32" column="85" selection-start-line="32" selection-start-column="85" selection-end-line="32" selection-end-column="85" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -578,7 +615,7 @@
     <entry file="file://$PROJECT_DIR$/src/GUI/InfoFrame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="52" column="8" selection-start-line="52" selection-start-column="8" selection-end-line="53" selection-end-column="49" />
+          <caret line="52" column="85" selection-start-line="52" selection-start-column="85" selection-end-line="52" selection-end-column="85" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -588,17 +625,17 @@
     <entry file="file://$PROJECT_DIR$/src/GUI/ParametersFrame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="69" column="100" selection-start-line="69" selection-start-column="100" selection-end-line="69" selection-end-column="100" />
+          <caret line="69" column="86" selection-start-line="69" selection-start-column="86" selection-end-line="69" selection-end-column="86" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GUI/MainMenuFrame.java">
+    <entry file="file://$PROJECT_DIR$/src/GUI/AlgorithmFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3340206">
-          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+        <state vertical-scroll-proportion="1.6474227">
+          <caret line="47" column="86" selection-start-line="47" selection-start-column="86" selection-end-line="47" selection-end-column="86" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

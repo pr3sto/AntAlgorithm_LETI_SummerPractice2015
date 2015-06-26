@@ -45,7 +45,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         });
 
         // иконка
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/icon.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/images/icon.png")));
 
         // боковая панель
         JPanel sidePanel = new JPanel();

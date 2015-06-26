@@ -1,15 +1,11 @@
 package GUI;
 
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 
 // окно "главное меню"
 public class MainMenuFrame extends JFrame implements ActionListener {
@@ -25,7 +21,7 @@ public class MainMenuFrame extends JFrame implements ActionListener {
         setLayout(null);
 
         // иконка
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/icon.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/images/icon.png")));
 
         // картинка для заголовка
         JPanel titlePanel = new JPanel();
@@ -34,7 +30,7 @@ public class MainMenuFrame extends JFrame implements ActionListener {
         titlePanel.setBorder(title);
         titlePanel.setBounds(20, 20, 760, 207);
 
-        Image img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/title.png"));
+        Image img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/GUI/images/title.png"));
         JLabel picLabel = new JLabel(new ImageIcon(img));
         picLabel.setBounds(0, 0, 760, 200);
         titlePanel.add(picLabel);
