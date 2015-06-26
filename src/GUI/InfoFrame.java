@@ -43,10 +43,11 @@ public class InfoFrame extends JFrame implements ActionListener {
 
         // кнопка
         JButton backButton = new JButton("В главное меню");
-        backButton.setBounds(250, 480, 300, 60);
         backButton.setFont(new Font("Arial", Font.BOLD, 14));
-        backButton.addActionListener(this);
+        backButton.setBounds(250, 480, 300, 60);
+        backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         backButton.setActionCommand("BackButton");
+        backButton.addActionListener(this);
         add(backButton);
 
         // картинка с информацией об алгоритме
@@ -55,7 +56,7 @@ public class InfoFrame extends JFrame implements ActionListener {
         // панель с прокруткой
         JScrollPane panel = new JScrollPane(new JLabel(infoImage));
         panel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        panel.setBounds(0, 0, 800, 450);
+        panel.setBounds(0, 0, 795, 450);
         // скорость прокрутки
         JScrollBar jsp = panel.getVerticalScrollBar();
         jsp.setUnitIncrement(25);

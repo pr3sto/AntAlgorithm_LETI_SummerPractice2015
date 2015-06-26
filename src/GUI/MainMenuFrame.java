@@ -45,31 +45,35 @@ public class MainMenuFrame extends JFrame implements ActionListener {
 
         // кнопки
         JButton startButton = new JButton("Запуск алгоритма");
-        startButton.setBounds(20, 20, 300, 60);
         startButton.setFont(new Font("Arial", Font.BOLD, 14));
-        startButton.addActionListener(this);
+        startButton.setBounds(20, 20, 300, 60);
+        startButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         startButton.setActionCommand("StartButton");
+        startButton.addActionListener(this);
         buttonPanel.add(startButton);
 
         JButton settingsButton = new JButton("Параметры");
-        settingsButton.setBounds(20, 90, 300, 60);
         settingsButton.setFont(new Font("Arial", Font.BOLD, 14));
-        settingsButton.addActionListener(this);
+        settingsButton.setBounds(20, 90, 300, 60);
+        settingsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         settingsButton.setActionCommand("ParametersButton");
+        settingsButton.addActionListener(this);
         buttonPanel.add(settingsButton);
 
         JButton infoButton = new JButton("Информация об алгоритме");
-        infoButton.setBounds(20, 160, 300, 60);
         infoButton.setFont(new Font("Arial", Font.BOLD, 14));
-        infoButton.addActionListener(this);
+        infoButton.setBounds(20, 160, 300, 60);
+        infoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         infoButton.setActionCommand("InfoButton");
+        infoButton.addActionListener(this);
         buttonPanel.add(infoButton);
 
         JButton exitButton = new JButton("Выход");
-        exitButton.setBounds(20, 230, 300, 60);
         exitButton.setFont(new Font("Arial", Font.BOLD, 14));
-        exitButton.addActionListener(this);
+        exitButton.setBounds(20, 230, 300, 60);
+        exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         exitButton.setActionCommand("ExitButton");
+        exitButton.addActionListener(this);
         buttonPanel.add(exitButton);
 
         getContentPane().add(buttonPanel);// добавление панели на окно

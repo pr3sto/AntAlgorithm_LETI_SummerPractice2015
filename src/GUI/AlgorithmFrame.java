@@ -49,8 +49,8 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
 
         // боковая панель
         JPanel sidePanel = new JPanel();
-        sidePanel.setLayout(null);
         sidePanel.setBounds(10, 10, 280, 660);
+        sidePanel.setLayout(null);
         TitledBorder title = BorderFactory.createTitledBorder("");
         sidePanel.setBorder(title);
 
@@ -62,8 +62,9 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         startVertexComboBox = new JComboBox();
         startVertexComboBox.setFont(new Font("Arial", Font.BOLD, 14));
         startVertexComboBox.setBounds(20, 70, 240, 40);
-        startVertexComboBox.addActionListener(this);
+        startVertexComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         startVertexComboBox.setName("StartVertexComboBox");
+        startVertexComboBox.addActionListener(this);
         sidePanel.add(startVertexComboBox);
 
         endVertexLabel = new JLabel("Конечная вершина:");
@@ -74,43 +75,48 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         endVertexComboBox = new JComboBox();
         endVertexComboBox.setFont(new Font("Arial", Font.BOLD, 14));
         endVertexComboBox.setBounds(20, 160, 240, 40);
-        endVertexComboBox.addActionListener(this);
+        endVertexComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         endVertexComboBox.setName("EndVertexComboBox");
+        endVertexComboBox.addActionListener(this);
         sidePanel.add(endVertexComboBox);
 
         // кнопки
         JButton nextStepButton = new JButton("Следующий шаг");
-        nextStepButton.setBounds(20, 260, 240, 60);
         nextStepButton.setFont(new Font("Arial", Font.BOLD, 14));
-        nextStepButton.addActionListener(this);
+        nextStepButton.setBounds(20, 260, 240, 60);
+        nextStepButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         nextStepButton.setActionCommand("NextStepButton");
+        nextStepButton.addActionListener(this);
         sidePanel.add(nextStepButton);
 
         JButton autoStepButton = new JButton("Авто");
-        autoStepButton.setBounds(20, 330, 240, 60);
         autoStepButton.setFont(new Font("Arial", Font.BOLD, 14));
-        autoStepButton.addActionListener(this);
+        autoStepButton.setBounds(20, 330, 240, 60);
+        autoStepButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         autoStepButton.setActionCommand("AutoStepButton");
+        autoStepButton.addActionListener(this);
         sidePanel.add(autoStepButton);
 
         JButton clearButton = new JButton("Очистить");
-        clearButton.setBounds(20, 400, 240, 60);
         clearButton.setFont(new Font("Arial", Font.BOLD, 14));
-        clearButton.addActionListener(this);
+        clearButton.setBounds(20, 400, 240, 60);
+        clearButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         clearButton.setActionCommand("ClearButton");
+        clearButton.addActionListener(this);
         sidePanel.add(clearButton);
 
         JButton backButton = new JButton("В главное меню");
-        backButton.setBounds(20, 550, 240, 60);
         backButton.setFont(new Font("Arial", Font.BOLD, 14));
-        backButton.addActionListener(this);
+        backButton.setBounds(20, 550, 240, 60);
+        backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         backButton.setActionCommand("BackButton");
+        backButton.addActionListener(this);
         sidePanel.add(backButton);
 
         // панель с графом
         JPanel graphPanel = new JPanel();
-        graphPanel.setLayout(null);
         graphPanel.setBounds(300, 10, 685, 660);
+        graphPanel.setLayout(null);
         TitledBorder panelTitle = BorderFactory.createTitledBorder("");
         graphPanel.setBorder(panelTitle);
 
