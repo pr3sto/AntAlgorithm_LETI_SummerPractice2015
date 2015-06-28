@@ -1,27 +1,104 @@
-package Algorithm;
+package Graph;
 
 import java.util.*;
 
+import Staff.Pair;
+
 public class Graph {
+
+    public static Character[] alphabet = {'A',       // алфавит для списков вершин
+            'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
 
     public int numberOfVertices;         // Number of graph nodes
     public int[][] adjacencyMatrix;      // Adjacency matrix with weights
     public boolean[][] linksMatrix;      // Adjacency matrix with links only. We'll use Warshall algorithm to it.
 
+    public List<Edge> edges;             // Graph's edges
+    public List<Vertex> vertices;        // Graph's vertices
+
     public Graph() {                     // Constructor
         numberOfVertices = 0;
         adjacencyMatrix = null;
         linksMatrix = null;
+        edges = null;
+        vertices = null;
     }
 
-    private void createGraph(int n) {     // create graph
+    public Graph(Graph g) {              // Copy constructor
+        numberOfVertices = g.numberOfVertices;
+
+        createMatrix(numberOfVertices);
+
+        for (int i = 0; i < numberOfVertices; ++i)
+            for (int j = 0; j < numberOfVertices; ++j) {
+                adjacencyMatrix[i][j] = g.adjacencyMatrix[i][j];
+                linksMatrix[i][j] = g.linksMatrix[i][j];
+            }
+
+        if (g.edges != null) edges = new ArrayList<>(g.edges);
+        if (g.vertices != null) vertices = new ArrayList<>(g.vertices);
+    }
+
+    public boolean isNull() {
+        for (int i = 0; i < numberOfVertices; ++i)
+            for (int j = 0; j < numberOfVertices; ++j)
+                if (linksMatrix[i][j])
+                    return false;         // no edges
+
+        return true;
+    }
+
+    public boolean isCreated() {         // is graph created
+        return numberOfVertices != 0;
+    }
+
+    private void createMatrix(int n) {     // create graph
         numberOfVertices = n;
         adjacencyMatrix = new int[n][n];
         linksMatrix = new boolean[n][n];
     }
 
-    public boolean isCreated() {         // is graph created
-        return numberOfVertices != 0;
+    private void createVerticesAndEdges() {
+        // create vertices
+        vertices = new ArrayList<>(numberOfVertices);
+
+        int centerOfPanelX = 342;
+        int centerOfPanelY = 330;
+        int distanceToCenterOfVertex = 290;
+
+        // координаты вершины
+        int vertexX = centerOfPanelX;
+        int vertexY = centerOfPanelY - distanceToCenterOfVertex;
+
+        // дополнительные переменные
+        double radNextX = vertexX - centerOfPanelX;
+        double radNextY = vertexY - centerOfPanelY;
+        double polarX, polarY;
+        double tempX, tempY;
+
+        for(int i = 0; i < numberOfVertices ; ++i) {
+            vertices.add(new Vertex(vertexX, vertexY, alphabet[i]));
+
+            polarX = 1 * Math.cos(Math.acos(-1.0) * 2 / numberOfVertices);
+            polarY = 1 * Math.sin(Math.acos(-1.0) * 2 / numberOfVertices);
+
+            tempX = radNextX * polarX - radNextY * polarY;
+            tempY = radNextX * polarY + radNextY * polarX;
+
+            radNextX = tempX;
+            radNextY = tempY;
+
+            vertexX = (int)(centerOfPanelX + radNextX);
+            vertexY = (int)(centerOfPanelY + radNextY);
+        }
+
+        // create edges
+        edges = new ArrayList<>(numberOfVertices);
+        for (int i = 0; i < numberOfVertices; ++i)
+            for (int j = i; j < numberOfVertices; ++j)
+                if (adjacencyMatrix[i][j] != 0) {
+                    edges.add(new Edge(adjacencyMatrix[i][j], i, j));
+                }
     }
 
     private void makeWarshallAlgorithm() {       // Warshall algorithm
@@ -37,7 +114,7 @@ public class Graph {
     public void generateGraph(int numberOfVertices, int linksPercent,
                               int leftBound, int rightBound) { // Graph generation
 
-        createGraph(numberOfVertices);
+        createMatrix(numberOfVertices);
 
         Random rand = new Random();             // random generator
 
@@ -81,6 +158,8 @@ public class Graph {
             }
 
         makeWarshallAlgorithm();                        // WarshallAlgorithm
+
+        createVerticesAndEdges();
     }
 
     public boolean createGraphFromFile(Scanner input) {      // create graph from file
@@ -113,7 +192,7 @@ public class Graph {
 
 
             // real creation of graph
-            createGraph(numberOfElements);
+            createMatrix(numberOfElements);
             for (int i = 0; i < numberOfElements; i++)
                 for (int j = 0; j < numberOfElements; j++) {
                     adjacencyMatrix[i][j] = massOfDigits[i * numberOfElements + j];
@@ -121,6 +200,8 @@ public class Graph {
                 }
 
             makeWarshallAlgorithm();
+
+            createVerticesAndEdges();
 
             return true; // graph created
         }

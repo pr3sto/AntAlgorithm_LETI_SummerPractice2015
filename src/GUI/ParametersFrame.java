@@ -15,8 +15,8 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import Algorithm.Graph;
-import Algorithm.Pair;
+import Graph.Graph;
+import Staff.Pair;
 
 // окно "параметры"
 public class ParametersFrame extends JFrame
@@ -78,7 +78,7 @@ public class ParametersFrame extends JFrame
         setResizable(false);
         setLayout(null);
 
-        // закрытие окна
+        // действие при закрытии окна
         addWindowListener(new WindowListener() {
             public void windowClosing(WindowEvent event) {
                 event.getWindow().setVisible(false);
@@ -448,7 +448,6 @@ public class ParametersFrame extends JFrame
     }
 
     // слайдеры
-    @Override
     public void stateChanged(ChangeEvent e) {
         Object source = e.getSource();
         JSlider slider = (JSlider)source;
@@ -463,12 +462,12 @@ public class ParametersFrame extends JFrame
                 break;
 
             case "GreedOfAlgorithmSlider":
-                // делить на 100, т. к. целочисленная шкла
+                // делить на 100, т. к. целочисленная шкла (1 == 0.1, 100 == 1)
                 params.first = new Integer(slider.getValue()).doubleValue() / 100;
                 break;
 
             case "RateOfEvaporationSlider":
-                // делить на 100, т. к. целочисленная шкла
+                // делить на 100, т. к. целочисленная шкла (1 == 0.1, 100 == 1)
                 params.second = new Integer(slider.getValue()).doubleValue() / 100;
                 break;
 
@@ -486,7 +485,6 @@ public class ParametersFrame extends JFrame
     }
 
     // поля "от" и "до"
-    @Override
     public void propertyChange(PropertyChangeEvent e) {
         Object source = e.getSource();
         JFormattedTextField field = (JFormattedTextField)source;
@@ -513,13 +511,11 @@ public class ParametersFrame extends JFrame
     }
 
     // нажатие кнопок
-    @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
 
         switch(cmd) {
-
-            // radio buttons
+            // радио кнопки
             case "FromFileRadioButton":
                 enableEnterFromFileGraph();
                 disableGenerationGraph();
@@ -554,8 +550,12 @@ public class ParametersFrame extends JFrame
                         showGraphButton.setText("Показать граф");
                         showGraphButton.setEnabled(true);
 
-                        JOptionPane.showMessageDialog(null,
-                                "Граф успешно создан!", "Граф создан", JOptionPane.PLAIN_MESSAGE);
+                        if (graph.isNull())
+                            JOptionPane.showMessageDialog(null,
+                                    "Граф успешно создан. Ребер нет!", "Внимание", JOptionPane.WARNING_MESSAGE);
+                        else
+                            JOptionPane.showMessageDialog(null,
+                                    "Граф успешно создан!", "Граф создан", JOptionPane.PLAIN_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(null,
                                 "Невозможно считать граф из файла!", "Ошибка", JOptionPane.ERROR_MESSAGE);
@@ -570,8 +570,12 @@ public class ParametersFrame extends JFrame
                 showGraphButton.setText("Показать граф");
                 showGraphButton.setEnabled(true);
 
-                JOptionPane.showMessageDialog(null,
-                        "Граф успешно создан!", "Граф создан", JOptionPane.PLAIN_MESSAGE);
+                if (graph.isNull())
+                    JOptionPane.showMessageDialog(null,
+                            "Граф успешно создан. Ребер нет!", "Внимание", JOptionPane.WARNING_MESSAGE);
+                else
+                    JOptionPane.showMessageDialog(null,
+                            "Граф успешно создан!", "Граф создан", JOptionPane.PLAIN_MESSAGE);
                 break;
 
             case "EnterGraphButton":

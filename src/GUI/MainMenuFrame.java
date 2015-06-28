@@ -8,9 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import Algorithm.AntAlgorithm;
-import Algorithm.Graph;
-import Algorithm.Pair;
+import Graph.Graph;
+import Staff.Pair;
 
 // окно "главное меню"
 public class MainMenuFrame extends JFrame implements ActionListener {
@@ -21,13 +20,14 @@ public class MainMenuFrame extends JFrame implements ActionListener {
     private Pair<Integer, Integer> antParams = new Pair<> (50,    // кол-во блиц муравьев
                                                          5000);   // общее кол-во муравьев
 
-    // окно параметров создается один раз (для сохранения параметров при деоктивации окна)
+    // окно параметров создается один раз (для сохранения параметров при деактивации окна)
     private ParametersFrame parametersFrame = new ParametersFrame(this, graph, params, antParams);
 
     // конструктор
     public MainMenuFrame() {
         super("Главное меню");
 
+        // скрыть созданное окно параметров
         parametersFrame.setVisible(false);
 
         // окно
@@ -94,7 +94,7 @@ public class MainMenuFrame extends JFrame implements ActionListener {
 
         add(buttonPanel); // добавление панели на окно
 
-        // открытие окна
+        // при открытии окна
         addWindowListener(new WindowListener() {
             public void windowOpened(WindowEvent event) { }
             public void windowClosing(WindowEvent event) {  }
@@ -119,21 +119,12 @@ public class MainMenuFrame extends JFrame implements ActionListener {
     }
 
     // нажатие кнопок
-    @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
 
         switch(cmd) {
             case "StartButton":
-                if (!graph.isCreated()) {
-                    JOptionPane.showMessageDialog(null,
-                            "Граф не создан! Зайдите в Параметры, чтобы создать граф.",
-                            "Внимание!", JOptionPane.PLAIN_MESSAGE);
-                    break;
-                }
-                new AlgorithmFrame(this, graph,
-                        new AntAlgorithm(graph, params.first, params.second,
-                                antParams.first, antParams.second));
+                new AlgorithmFrame(this, graph, params, antParams);
                 setVisible(false);
                 break;
 

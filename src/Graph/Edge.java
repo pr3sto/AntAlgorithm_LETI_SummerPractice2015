@@ -1,4 +1,4 @@
-package Algorithm;
+package Graph;
 
 // ребро
 public class Edge {

@@ -2,10 +2,13 @@ package Algorithm;
 
 import java.util.*;
 
+import Graph.Graph;
+import Graph.Edge;
+import Staff.Pair;
+
 public class AntAlgorithm {
 
     private Graph graph;                // graph
-    private List<Edge> edges;           // edges list
     private double greed;               // жадность алгоритма - больше влияет длина ребра
     private double gregariousness;      // стадность алгоритма - больше влияет кол-во феромонов
     private double evaporationSpeed;    // скорость испарения
@@ -20,7 +23,8 @@ public class AntAlgorithm {
                         double greed_,
                         double evaporationSpeed_,
                         int numberOfRandomAnts_,
-                        int numberOfAnts_) {    // constructor
+                        int numberOfAnts_,
+                        Pair<Integer, Integer> path) {    // constructor
 
         graph = graph_;
 
@@ -40,24 +44,10 @@ public class AntAlgorithm {
         numberOfRandomAnts = numberOfRandomAnts_;
         numberOfAnts = numberOfAnts_;
 
-        // initialisation of edges list
-        edges = new ArrayList<>(graph.numberOfVertices);
-        for (int i = 0; i < graph.numberOfVertices; ++i)
-            for (int j = i; j < graph.numberOfVertices; ++j)
-                if ( graph.adjacencyMatrix[i][j] != 0){
-                    edges.add(new Edge(graph.adjacencyMatrix[i][j], i, j));
-                }
+        startIndex = path.first;
+        finishIndex = path.second;
 
         count = 0;
-    }
-
-    public void refresh() {
-        count = 0;
-    }
-
-    public void initPath(int start, int finish) {
-        startIndex = start;
-        finishIndex = finish;
     }
 
     public void step() {
@@ -98,18 +88,22 @@ public class AntAlgorithm {
                     bannedN.add(currentIndex);
                     currentIndex = wayN.get(wayN.size() - 2);
                     wayN.remove(wayN.size() - 1);
+                    wayE.remove(wayE.size() - 1);
                     possibleNN.clear();
                     continue;
                 }
 
-                for (Edge i : edges)                    // adding edge to way
+                for (Edge i : graph.edges)                    // adding edge to way
                     if ((i.firstNode == Math.min(currentIndex, wayN.get(wayN.size() - 2)))
                             && (i.secondNode == Math.max(currentIndex, wayN.get(wayN.size() - 2)))) {
                         wayE.add(i);
-                        i.inCurrentPath = true;
+                        //i.inCurrentPath = true;
                         break;
                     }
             }
+
+            for(Edge i : wayE)
+                i.inCurrentPath = true;
 
             wayN.clear();
 
@@ -118,7 +112,7 @@ public class AntAlgorithm {
                 wayWeight += i.weight;
             }
 
-            for (Edge i : edges) {                               // pheromone update
+            for (Edge i : graph.edges) {                               // pheromone update
                 i.pheromone = (1.0 - evaporationSpeed) * i.pheromone;
                 if (i.inCurrentPath) {
                     i.pheromone += 1.0 / wayWeight;
@@ -152,7 +146,7 @@ public class AntAlgorithm {
                 }
 
                 for (int j : possibleNN) {
-                    for (Edge i : edges)
+                    for (Edge i : graph.edges)
                         if ((i.firstNode == Math.min(j, currentIndex))
                                 && (i.secondNode == Math.max(j, currentIndex))) {
                             possibleNE.add(i);
@@ -195,20 +189,24 @@ public class AntAlgorithm {
                     bannedN.add(currentIndex);
                     currentIndex = wayN.get(wayN.size() - 2);
                     wayN.remove(wayN.size() - 1);
+                    wayE.remove(wayE.size() - 1);
                     possibleNN.clear();
                     continue;
                 }
 
-                for ( Edge i : edges)                       // adding edge to way
+                for ( Edge i : graph.edges)                       // adding edge to way
                     if ( (i.firstNode == Math.min(currentIndex, wayN.get(wayN.size() - 1)) )
                             && (i.secondNode == Math.max(currentIndex, wayN.get(wayN.size() - 1)) ) ){
                         wayE.add(i);
-                        i.inCurrentPath = true;
+                        //i.inCurrentPath = true;
                         break;
                     }
 
                 wayN.add(currentIndex);
             }
+
+            for(Edge i : wayE)
+                i.inCurrentPath = true;
 
             wayN.clear();
 
@@ -217,11 +215,11 @@ public class AntAlgorithm {
                 wayWeight += i.weight;
             }
 
-            for (Edge i : edges) {                               // pheromone update
+            for (Edge i : graph.edges) {                               // pheromone update
                 i.pheromone = (1.0 - evaporationSpeed) * i.pheromone;
                 if (i.inCurrentPath){
                     i.pheromone += 1.0 / wayWeight;
-                i.inCurrentPath = false;}
+                    i.inCurrentPath = false;}
             }
 
             bannedN.clear();
@@ -242,7 +240,7 @@ public class AntAlgorithm {
         currentIndex = startIndex;
 
         while (currentIndex != finishIndex) {
-            for (Edge i : edges)
+            for (Edge i : graph.edges)
                 if ( i.firstNode == currentIndex || i.secondNode == currentIndex ){
                     boolean ok = true;
                     for (Edge k : banned)

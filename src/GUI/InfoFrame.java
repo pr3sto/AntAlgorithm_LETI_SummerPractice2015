@@ -24,7 +24,7 @@ public class InfoFrame extends JFrame implements ActionListener {
         setResizable(false);
         setLayout(null);
 
-        // закрытие окна
+        // действие при закрытии окна
         addWindowListener(new WindowListener() {
             public void windowClosing(WindowEvent event) {
                 event.getWindow().setVisible(false);
@@ -70,7 +70,6 @@ public class InfoFrame extends JFrame implements ActionListener {
     }
 
     // нажатие кнопки
-    @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
 

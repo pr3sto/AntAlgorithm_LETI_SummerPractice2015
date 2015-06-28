@@ -1,4 +1,4 @@
-package Algorithm;
+package Staff;
 
 public class Pair <A, B> {
     public A first;
