@@ -60,7 +60,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
             }
 
             // ребра
-            for (int i = 0; i < graph.numberOfVertices; i++) {
+            for (int i = 0; i < graph.edges.size(); i++) {
                 int x1 = graph.vertices.get(graph.edges.get(i).firstNode).coordX;
                 int y1 = graph.vertices.get(graph.edges.get(i).firstNode).coordY;
                 int x2 = graph.vertices.get(graph.edges.get(i).secondNode).coordX;
