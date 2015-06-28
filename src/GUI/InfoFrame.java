@@ -10,13 +10,13 @@ import java.awt.event.WindowEvent;
 // окно "информация об алгоритме"
 public class InfoFrame extends JFrame implements ActionListener {
 
-    private final MainMenuFrame mainMenuFrame; // главное окно
+    private final MainMenuFrame mainMenuFrame; // ссылка на главное окно
 
     // конструктор
-    public InfoFrame(MainMenuFrame frame) {
+    public InfoFrame(MainMenuFrame mainMenuFrame_) {
         super("Информация об алгоритме");
 
-        mainMenuFrame = frame;
+        mainMenuFrame = mainMenuFrame_;
 
         // окно
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -28,6 +28,7 @@ public class InfoFrame extends JFrame implements ActionListener {
         addWindowListener(new WindowListener() {
             public void windowClosing(WindowEvent event) {
                 event.getWindow().setVisible(false);
+                event.getWindow().dispose();
                 mainMenuFrame.setVisible(true);
             }
             public void windowActivated(WindowEvent event) { }
@@ -57,6 +58,7 @@ public class InfoFrame extends JFrame implements ActionListener {
         JScrollPane panel = new JScrollPane(new JLabel(infoImage));
         panel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         panel.setBounds(0, 0, 795, 450);
+        panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         // скорость прокрутки
         JScrollBar jsp = panel.getVerticalScrollBar();
         jsp.setUnitIncrement(25);
@@ -73,7 +75,8 @@ public class InfoFrame extends JFrame implements ActionListener {
         String cmd = e.getActionCommand();
 
         if(cmd.equals("BackButton")) {
-            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            setVisible(false);
+            dispose();
             mainMenuFrame.setVisible(true);
         }
     }

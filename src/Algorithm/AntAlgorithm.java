@@ -3,7 +3,8 @@ package Algorithm;
 import java.util.*;
 
 public class AntAlgorithm {
-    private Graph field;                // graph
+
+    private Graph graph;                // graph
     private List<Edge> edges;           // edges list
     private double greed;               // жадность алгоритма - больше влияет длина ребра
     private double gregariousness;      // стадность алгоритма - больше влияет кол-во феромонов
@@ -12,66 +13,98 @@ public class AntAlgorithm {
     private int startIndex;             // starting node index
     private int finishIndex;            // finish node index
     private int currentIndex;           // current node index
+    private int numberOfRandomAnts;
+    private int numberOfAnts;
 
-    public AntAlgorithm(Graph fld, double k, double p, int start, int finish){    // constructor
-        field = fld;
-        count = 0;
-        startIndex = start;
-        finishIndex = finish;
+    public AntAlgorithm(Graph graph_,
+                        double greed_,
+                        double evaporationSpeed_,
+                        int numberOfRandomAnts_,
+                        int numberOfAnts_) {    // constructor
 
-        if (k <= 1){
-            greed = k;
-            gregariousness = 1 - k;
-        }
-        else{
+        graph = graph_;
+
+        if (greed_ <= 1) {
+            greed = greed_;
+            gregariousness = 1 - greed;
+        } else {
             greed = 0.5;
             gregariousness = 0.5;
         }
 
         if (evaporationSpeed < 1)
-            evaporationSpeed = p;
+            evaporationSpeed = evaporationSpeed_;
         else
             evaporationSpeed = 0.5;
 
+        numberOfRandomAnts = numberOfRandomAnts_;
+        numberOfAnts = numberOfAnts_;
+
         // initialisation of edges list
-        for (int i = 0; i < field.numberOfVertices; ++i)
-            for (int j = i; j < field.numberOfVertices; ++j)
-                if ( field.adjacencyMatrix[i][j] != 0){
-                    edges.add(new Edge(field.adjacencyMatrix[i][j], i, j));
+        edges = new ArrayList<>(graph.numberOfVertices);
+        for (int i = 0; i < graph.numberOfVertices; ++i)
+            for (int j = i; j < graph.numberOfVertices; ++j)
+                if ( graph.adjacencyMatrix[i][j] != 0){
+                    edges.add(new Edge(graph.adjacencyMatrix[i][j], i, j));
                 }
+
+        count = 0;
     }
 
-    public void step(){                                     // ДОБАВИТЬ ПРОВЕРКУ НА ВОЗМОЖНОСТЬ ПЕРЕХОДА В ПРИНЦИПЕ
+    public void refresh() {
+        count = 0;
+    }
+
+    public void initPath(int start, int finish) {
+        startIndex = start;
+        finishIndex = finish;
+    }
+
+    public void step() {
         List<Integer> wayN = new ArrayList<>();             // way ant goes (nodes)
-        List<Edge> wayE = new ArrayList<>();                // way ant goes (edges) MAYBE DON'T NEED IT
+        List<Edge> wayE = new ArrayList<>();                // way ant goes (edges)
         wayN.add(startIndex);
         currentIndex = startIndex;
-        if (count < 5) {                                    // first 5 ants go randomly
-            while (currentIndex != finishIndex){            // while ant not find finish
+        List<Integer> bannedN = new ArrayList<>();
+
+        if (count < numberOfRandomAnts) {                    // first numberOfRandomAnts ants go randomly
+            while (currentIndex != finishIndex) {            // while ant not find finish
+
                 List<Integer> possibleNN = new ArrayList<>();   // list of possible next nodes
 
-                for (int i = 0; i < field.numberOfVertices; ++i)
-                    if (field.adjacencyMatrix[currentIndex][i] != 0) {
+                for (int i = 0; i < graph.numberOfVertices; ++i)
+                    if (graph.adjacencyMatrix[currentIndex][i] != 0) {
                         boolean ok = true;                  // true if an ant not been in possible next node
-                        for (int j = 0; j < wayN.size(); ++j)
-                            if (i == wayN.get(j))
+
+                        for (Integer j : wayN)
+                            if (i == j) {
                                 ok = false;                 // already been here
-                        if (ok)
-                            possibleNN.add(i);
+                                break;
+                            }
+                        if (ok) {
+                            for (Integer j : bannedN)
+                                if (j == i)
+                                    ok = false;
+                            if (ok) possibleNN.add(i);
+                        }
                     }
 
                 Random rand = new Random();
 
                 if (possibleNN.size() != 0) {                // random choice
-                    currentIndex = possibleNN.get(rand.nextInt() % possibleNN.size());
+                    currentIndex = possibleNN.get(Math.abs(rand.nextInt()) % possibleNN.size());
+                    wayN.add(currentIndex);
                 } else {
-                    currentIndex = wayN.get(wayN.size() - 1);
+                    bannedN.add(currentIndex);
+                    currentIndex = wayN.get(wayN.size() - 2);
                     wayN.remove(wayN.size() - 1);
+                    possibleNN.clear();
+                    continue;
                 }
 
-                for (Edge i : edges)                       // adding edge to way
-                    if ((i.firstNode == Math.min(currentIndex, wayN.get(wayN.size() - 1)))
-                            && (i.secondNode == Math.max(currentIndex, wayN.get(wayN.size() - 1)))) {
+                for (Edge i : edges)                    // adding edge to way
+                    if ((i.firstNode == Math.min(currentIndex, wayN.get(wayN.size() - 2)))
+                            && (i.secondNode == Math.max(currentIndex, wayN.get(wayN.size() - 2)))) {
                         wayE.add(i);
                         i.inCurrentPath = true;
                         break;
@@ -80,57 +113,69 @@ public class AntAlgorithm {
 
             wayN.clear();
 
-            int wayWeight = 0;                                  // weight of way
+            double wayWeight = 0.0;                              // weight of way
             for (Edge i : wayE) {
                 wayWeight += i.weight;
             }
 
-            for (Edge i : edges){                               // pheromone update
+            for (Edge i : edges) {                               // pheromone update
                 i.pheromone = (1.0 - evaporationSpeed) * i.pheromone;
-                if (i.inCurrentPath)
-                    i.pheromone += 1 / wayWeight;
+                if (i.inCurrentPath) {
+                    i.pheromone += 1.0 / wayWeight;
+                    i.inCurrentPath = false;
+                }
             }
-        }
-        else{                                               // other steps, when the choice depends on the pheromone
-            while(currentIndex != finishIndex){             // while ant not find finish
+
+            bannedN.clear();
+
+        } else {                                             // other steps, when the choice depends on the pheromone
+            while (currentIndex != finishIndex) {             // while ant not find finish
+
                 List<Integer> possibleNN = new ArrayList<>();   // list of possible next nodes
                 List<Edge> possibleNE = new ArrayList<>();      // list of possible next edges
 
-                for (int i = 0; i < field.numberOfVertices; ++i)
-                    if (field.adjacencyMatrix[currentIndex][i] != 0){
+                for (int i = 0; i < graph.numberOfVertices; ++i) {
+                    if (graph.adjacencyMatrix[currentIndex][i] != 0) {
                         boolean ok = true;                  // true if an ant not been in possible next node
-                        for (int j = 0; j < wayN.size(); ++j)
-                            if (i == wayN.get(j))
+                        for (Integer j : wayN)
+                            if (i == j) {
                                 ok = false;                 // already been here
-                        if (ok)
-                            possibleNN.add(i);
+                                break;
+                            }
+                        if (ok) {
+                            for (Integer j : bannedN)
+                                if (j == i)
+                                    ok = false;
+                            if (ok) possibleNN.add(i);
+                        }
                     }
+                }
 
-                for (int j : possibleNN){
+                for (int j : possibleNN) {
                     for (Edge i : edges)
-                        if ((i.firstNode == Math.min(j, wayN.get(wayN.size() - 1)))
-                                && (i.secondNode == Math.max(j, wayN.get(wayN.size() - 1)))) {
+                        if ((i.firstNode == Math.min(j, currentIndex))
+                                && (i.secondNode == Math.max(j, currentIndex))) {
                             possibleNE.add(i);
                             break;
                         }
                 }
 
-                List<Double> probability = new ArrayList<>(possibleNN.size());      //probabilities of going that way
+                List<Double> probability = new ArrayList<>();      //probabilities of going that way
 
                 double sum = 0.0;
 
-                for (int i = 0; i < possibleNE.size(); ++i){
-                    double k = Math.pow( possibleNE.get(i).pheromone,gregariousness ) * Math.pow (1/possibleNE.get(i).weight, greed);
+                for (Edge i : possibleNE) {
+                    double k = Math.pow(i.pheromone,gregariousness) * Math.pow (1.0 / i.weight, greed);
                     sum += k;
                     probability.add(k);
                 }
 
-                for (int i = 0; i < probability.size(); ++i){
+                for (int i = 0; i < probability.size(); ++i) {
                     double temp = probability.get(i);
                     probability.set(i, temp/sum);
                 }
 
-                for (int i = 1; i < probability.size(); ++i){
+                for (int i = 1; i < probability.size(); ++i) {
                     double temp = probability.get(i);
                     probability.set(i, temp + probability.get(i - 1));
                 }
@@ -146,9 +191,12 @@ public class AntAlgorithm {
                         break;
                     }
 
-                if (possibleNN.size() == 0){                // random choice
-                    currentIndex = wayN.get( wayN.size() - 1);
-                    wayN.remove( wayN.size() - 1);
+                if (possibleNN.size() == 0) {                // random choice
+                    bannedN.add(currentIndex);
+                    currentIndex = wayN.get(wayN.size() - 2);
+                    wayN.remove(wayN.size() - 1);
+                    possibleNN.clear();
+                    continue;
                 }
 
                 for ( Edge i : edges)                       // adding edge to way
@@ -164,18 +212,62 @@ public class AntAlgorithm {
 
             wayN.clear();
 
-            int wayWeight = 0;                                  // weight of way
-            for (Edge i : wayE){
+            double wayWeight = 0.0;                              // weight of way
+            for (Edge i : wayE) {
                 wayWeight += i.weight;
             }
 
-            for (Edge i : edges){                               // pheromone update
+            for (Edge i : edges) {                               // pheromone update
                 i.pheromone = (1.0 - evaporationSpeed) * i.pheromone;
-                if (i.inCurrentPath)
-                    i.pheromone += 1/wayWeight;
+                if (i.inCurrentPath){
+                    i.pheromone += 1.0 / wayWeight;
+                i.inCurrentPath = false;}
             }
+
+            bannedN.clear();
         }
+
+        ++count;
     }
 
+    public List<Integer> autoAlgorithm() {
+        while (count <= numberOfAnts)
+            step();
 
+        // find way
+        List<Integer> nodesInPath = new ArrayList<>();
+        List<Edge> probEdges = new ArrayList<>();
+        nodesInPath.add(startIndex);
+        List<Edge> banned = new ArrayList<>();
+        currentIndex = startIndex;
+
+        while (currentIndex != finishIndex) {
+            for (Edge i : edges)
+                if ( i.firstNode == currentIndex || i.secondNode == currentIndex ){
+                    boolean ok = true;
+                    for (Edge k : banned)
+                        if (k == i)
+                            ok = false;
+                    if (ok)
+                    probEdges.add(i);
+                }
+
+            Edge edge = probEdges.get(0);
+            for (Edge i : probEdges)
+                if (i.pheromone > edge.pheromone)
+                    edge = i;
+
+            banned.add(edge);
+            probEdges.clear();
+
+            if (edge.firstNode == currentIndex)
+                nodesInPath.add(edge.secondNode);
+            else
+                nodesInPath.add(edge.firstNode);
+
+            currentIndex = nodesInPath.get(nodesInPath.size() - 1);
+        }
+
+        return nodesInPath; // path of ant
+    }
 }

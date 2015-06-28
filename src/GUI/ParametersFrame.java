@@ -18,14 +18,15 @@ import java.beans.PropertyChangeListener;
 import Algorithm.Graph;
 import Algorithm.Pair;
 
-// окно "Параметры"
+// окно "параметры"
 public class ParametersFrame extends JFrame
         implements ActionListener, ChangeListener, PropertyChangeListener {
 
 
-    private final MainMenuFrame mainMenuFrame;    // главное окно
-    private Pair<Double, Double> params;          // параметры (жадность, скорость испарения)
-    private Graph graph;
+    private final MainMenuFrame mainMenuFrame;    // ссылка на главное окно
+    private Graph graph;                          // ссылка на граф
+    private Pair<Double, Double> params;          // ссылка на параметры (жадность, скорость испарения)
+    private Pair<Integer, Integer> antParams;     // ссылка на параметры муравьев
 
 
     // параметры генерации
@@ -34,6 +35,8 @@ public class ParametersFrame extends JFrame
     private Pair<Integer, Integer> rangeOfWeights
                         = new Pair<>(1,100);      // диапозон весов
 
+
+    // компоненты окна
 
     // группа "из файла"
     private JFileChooser fileChooser;
@@ -60,12 +63,14 @@ public class ParametersFrame extends JFrame
 
 
     // конструктор
-    public ParametersFrame(MainMenuFrame frame, Graph graph_, Pair<Double, Double> params_) {
+    public ParametersFrame(MainMenuFrame mainMenuFrame_, Graph graph_,
+                           Pair<Double, Double> params_, Pair<Integer, Integer> antParams_) {
         super("Параметры");
 
-        mainMenuFrame = frame;
-        params = params_;
+        mainMenuFrame = mainMenuFrame_;
         graph = graph_;
+        params = params_;
+        antParams = antParams_;
 
         // окно
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -77,6 +82,7 @@ public class ParametersFrame extends JFrame
         addWindowListener(new WindowListener() {
             public void windowClosing(WindowEvent event) {
                 event.getWindow().setVisible(false);
+                event.getWindow().dispose();
                 mainMenuFrame.setVisible(true);
             }
             public void windowActivated(WindowEvent event) { }
@@ -93,11 +99,11 @@ public class ParametersFrame extends JFrame
         // панель "ввод графа"
         JPanel enterGraphPanel = new JPanel();
         enterGraphPanel.setLayout(null);
-        enterGraphPanel.setBounds(20, 10, 760, 290);
-        TitledBorder title = BorderFactory.createTitledBorder("Ввод графа:");
-        enterGraphPanel.setBorder(title);
+        enterGraphPanel.setBounds(20, 5, 760, 270);
+        TitledBorder enterGraphPanelTitle = BorderFactory.createTitledBorder("Ввод графа:");
+        enterGraphPanel.setBorder(enterGraphPanelTitle);
 
-        // кнопки выбора ввода
+        // радио кнопки выбора ввода
         JRadioButton fromFileRadioButton = new JRadioButton("Из файла:");
         fromFileRadioButton.setFont(new Font("Arial", Font.PLAIN, 14));
         fromFileRadioButton.setBounds(20, 40, 90, 20);
@@ -108,17 +114,21 @@ public class ParametersFrame extends JFrame
 
         JRadioButton generateGraphRadioButton = new JRadioButton("Генерация:");
         generateGraphRadioButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        generateGraphRadioButton.setBounds(20, 85, 100, 20);
+        generateGraphRadioButton.setBounds(20, 80, 100, 20);
         generateGraphRadioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         generateGraphRadioButton.setActionCommand("GenerateRadioButton");
         generateGraphRadioButton.addActionListener(this);
 
         JRadioButton handEnterGraphRadioButton = new JRadioButton("Ручной ввод:");
         handEnterGraphRadioButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        handEnterGraphRadioButton.setBounds(20, 240, 110, 20);
+        handEnterGraphRadioButton.setBounds(20, 220, 110, 20);
         handEnterGraphRadioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         handEnterGraphRadioButton.setActionCommand("HandEnterRadioButton");
         handEnterGraphRadioButton.addActionListener(this);
+
+        // ---------------------------------------- для первой версии -------------------------------------------------
+        handEnterGraphRadioButton.setEnabled(false);
+        // ------------------------------------------------------------------------------------------------------------
 
         // группа кнопок выбора
         ButtonGroup enterGraphGroup = new ButtonGroup();
@@ -131,7 +141,7 @@ public class ParametersFrame extends JFrame
         enterGraphPanel.add(handEnterGraphRadioButton);
 
 
-        // из файла
+        // ввод графа из файла
         fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Text files", "txt"));
 
@@ -149,6 +159,7 @@ public class ParametersFrame extends JFrame
         filePathTextField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         enterGraphPanel.add(filePathTextField);
 
+        // кнопка "создать граф из файла"
         createGraphFromFileButton = new JButton("Создать граф");
         createGraphFromFileButton.setFont(new Font("Arial", Font.BOLD, 14));
         createGraphFromFileButton.setBounds(590, 30, 150, 40);
@@ -159,14 +170,14 @@ public class ParametersFrame extends JFrame
         enterGraphPanel.add(createGraphFromFileButton);
 
 
-        // генерация
+        // ввод графа - генерация
         numberOfVerticesLabel = new JLabel("Количество вершин:");
         numberOfVerticesLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        numberOfVerticesLabel.setBounds(140, 75, 140, 40);
+        numberOfVerticesLabel.setBounds(140, 70, 140, 40);
         enterGraphPanel.add(numberOfVerticesLabel);
         // слайдер - количество вершин
         numberOfVerticesSlider = new JSlider(JSlider.HORIZONTAL, 2, 10, numberOfVertices);
-        numberOfVerticesSlider.setBounds(310, 85, 425, 40);
+        numberOfVerticesSlider.setBounds(310, 80, 425, 40);
         numberOfVerticesSlider.setMajorTickSpacing(1);
         numberOfVerticesSlider.setMinorTickSpacing(1);
         numberOfVerticesSlider.setPaintTicks(true);
@@ -180,11 +191,11 @@ public class ParametersFrame extends JFrame
 
         percentOfEdgesLabel = new JLabel("Процент ребер:");
         percentOfEdgesLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        percentOfEdgesLabel.setBounds(140, 130, 120, 40);
+        percentOfEdgesLabel.setBounds(140, 115, 120, 40);
         enterGraphPanel.add(percentOfEdgesLabel);
         // слайдер - процент ребер
-        percentOfEdgesSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, percentOfEdges);
-        percentOfEdgesSlider.setBounds(310, 140, 425, 40);
+        percentOfEdgesSlider = new JSlider(JSlider.HORIZONTAL, 20, 100, percentOfEdges);
+        percentOfEdgesSlider.setBounds(310, 125, 425, 40);
         percentOfEdgesSlider.setMajorTickSpacing(10);
         percentOfEdgesSlider.setMinorTickSpacing(5);
         percentOfEdgesSlider.setPaintTicks(true);
@@ -206,18 +217,18 @@ public class ParametersFrame extends JFrame
         // поля - диапозон весов
         rangeOfWeightsLabel = new JLabel("Диапозон весов:");
         rangeOfWeightsLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        rangeOfWeightsLabel.setBounds(140, 185, 120, 40);
+        rangeOfWeightsLabel.setBounds(140, 170, 120, 40);
         enterGraphPanel.add(rangeOfWeightsLabel);
 
         // от
         rangeFromLabel = new JLabel("От:");
         rangeFromLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        rangeFromLabel.setBounds(310, 185, 30, 40);
+        rangeFromLabel.setBounds(310, 170, 30, 40);
         enterGraphPanel.add(rangeFromLabel);
 
         rangeFromField = new JFormattedTextField(nff);
         rangeFromField.setValue(rangeOfWeights.first);
-        rangeFromField.setBounds(340, 190, 50, 30);
+        rangeFromField.setBounds(340, 175, 50, 30);
         rangeFromField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         rangeFromField.setName("RangeFromField");
         rangeFromField.addPropertyChangeListener(this);
@@ -226,31 +237,31 @@ public class ParametersFrame extends JFrame
         // до
         rangeToLabel = new JLabel("До:");
         rangeToLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        rangeToLabel.setBounds(420, 185, 30, 40);
+        rangeToLabel.setBounds(420, 170, 30, 40);
         enterGraphPanel.add(rangeToLabel);
 
         rangeToField = new JFormattedTextField(nff);
         rangeToField.setValue(rangeOfWeights.second);
-        rangeToField.setBounds(450, 190, 50, 30);
+        rangeToField.setBounds(450, 175, 50, 30);
         rangeToField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         rangeToField.setName("RangeToField");
         rangeToField.addPropertyChangeListener(this);
         enterGraphPanel.add(rangeToField);
 
-        // кнопка "создать граф"
+        // кнопка "создать граф - генерация"
         createGraphGenerateButton = new JButton("Создать граф");
         createGraphGenerateButton.setFont(new Font("Arial", Font.BOLD, 14));
-        createGraphGenerateButton.setBounds(590, 185, 150, 40);
+        createGraphGenerateButton.setBounds(590, 170, 150, 40);
         createGraphGenerateButton.setActionCommand("CreateGraphGenerateButton");
         createGraphGenerateButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         createGraphGenerateButton.addActionListener(this);
         enterGraphPanel.add(createGraphGenerateButton);
 
 
-        // ручной ввод
+        // ввод графа - ручной ввод
         handEnterGraphButton = new JButton("Ввести граф");
         handEnterGraphButton.setFont(new Font("Arial", Font.BOLD, 14));
-        handEnterGraphButton.setBounds(140, 230, 150, 40);
+        handEnterGraphButton.setBounds(140, 210, 150, 40);
         handEnterGraphButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         handEnterGraphButton.setActionCommand("EnterGraphButton");
         handEnterGraphButton.addActionListener(this);
@@ -260,14 +271,22 @@ public class ParametersFrame extends JFrame
         // панель "дополнительные параметры"
         JPanel paramsPanel = new JPanel();
         paramsPanel.setLayout(null);
-        paramsPanel.setBounds(20, 320, 760, 150);
-        TitledBorder panelTitle = BorderFactory.createTitledBorder("Дополнительные параметры:");
-        paramsPanel.setBorder(panelTitle);
+        paramsPanel.setBounds(20, 280, 760, 230);
+        TitledBorder paramsPanelTitle = BorderFactory.createTitledBorder("Дополнительные параметры:");
+        paramsPanel.setBorder(paramsPanelTitle);
 
         // --- для шкалы  слайдеров ---
         Hashtable labelTable = new Hashtable();
         labelTable.put(0, new JLabel("0.0"));
+        labelTable.put(10, new JLabel("0.1"));
+        labelTable.put(20, new JLabel("0.2"));
+        labelTable.put(30, new JLabel("0.3"));
+        labelTable.put(40, new JLabel("0.4"));
         labelTable.put(50, new JLabel("0.5"));
+        labelTable.put(60, new JLabel("0.6"));
+        labelTable.put(70, new JLabel("0.7"));
+        labelTable.put(80, new JLabel("0.8"));
+        labelTable.put(90, new JLabel("0.9"));
         labelTable.put(100, new JLabel("1.0"));
         // ----------------------------
 
@@ -281,8 +300,8 @@ public class ParametersFrame extends JFrame
         JSlider greedOfAlgorithmSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, greedInt);
         greedOfAlgorithmSlider.setBounds(310, 30, 425, 40);
         greedOfAlgorithmSlider.setLabelTable(labelTable);
-        greedOfAlgorithmSlider.setMajorTickSpacing(50);
-        greedOfAlgorithmSlider.setMinorTickSpacing(10);
+        greedOfAlgorithmSlider.setMajorTickSpacing(10);
+        greedOfAlgorithmSlider.setMinorTickSpacing(5);
         greedOfAlgorithmSlider.setPaintTicks(true);
         greedOfAlgorithmSlider.setPaintLabels(true);
         greedOfAlgorithmSlider.setFont(new Font("Arial", Font.PLAIN, 10));
@@ -294,16 +313,16 @@ public class ParametersFrame extends JFrame
 
         JLabel rateOfEvaporationLabel = new JLabel("Скорость испарения феромона:");
         rateOfEvaporationLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        rateOfEvaporationLabel.setBounds(20, 70, 220, 40);
+        rateOfEvaporationLabel.setBounds(20, 65, 220, 40);
         paramsPanel.add(rateOfEvaporationLabel);
         // слайдер - скорость испарения феромона
-        Double tmp1 = params.second*100;
+        Double tmp1 = params.second * 100;
         Integer evaporationSpeedInt = tmp1.intValue();
         JSlider rateOfEvaporationSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, evaporationSpeedInt);
-        rateOfEvaporationSlider.setBounds(310, 80, 425, 40);
+        rateOfEvaporationSlider.setBounds(310, 75, 425, 40);
         rateOfEvaporationSlider.setLabelTable(labelTable);
-        rateOfEvaporationSlider.setMajorTickSpacing(50);
-        rateOfEvaporationSlider.setMinorTickSpacing(10);
+        rateOfEvaporationSlider.setMajorTickSpacing(10);
+        rateOfEvaporationSlider.setMinorTickSpacing(5);
         rateOfEvaporationSlider.setPaintTicks(true);
         rateOfEvaporationSlider.setPaintLabels(true);
         rateOfEvaporationSlider.setFont(new Font("Arial", Font.PLAIN, 10));
@@ -313,11 +332,47 @@ public class ParametersFrame extends JFrame
         rateOfEvaporationSlider.addChangeListener(this);
         paramsPanel.add(rateOfEvaporationSlider);
 
+        JLabel numberOfRandomAntsLabel = new JLabel("Количество \"Блиц\" муравьев: ");
+        numberOfRandomAntsLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        numberOfRandomAntsLabel.setBounds(20, 115, 210, 40);
+        paramsPanel.add(numberOfRandomAntsLabel);
+        // слайдер - количество блиц муравьев
+        JSlider numberOfRandomAntsSlider = new JSlider(JSlider.HORIZONTAL, 10, 100, antParams.first);
+        numberOfRandomAntsSlider.setBounds(310, 125, 425, 40);
+        numberOfRandomAntsSlider.setMajorTickSpacing(10);
+        numberOfRandomAntsSlider.setMinorTickSpacing(5);
+        numberOfRandomAntsSlider.setPaintTicks(true);
+        numberOfRandomAntsSlider.setPaintLabels(true);
+        numberOfRandomAntsSlider.setFont(new Font("Arial", Font.PLAIN, 10));
+        numberOfRandomAntsSlider.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
+        numberOfRandomAntsSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        numberOfRandomAntsSlider.setName("NumberOfRandomAntsSlider");
+        numberOfRandomAntsSlider.addChangeListener(this);
+        paramsPanel.add(numberOfRandomAntsSlider);
+
+        JLabel numberOfAntsLabel = new JLabel("Общее количество муравьев: ");
+        numberOfAntsLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        numberOfAntsLabel.setBounds(20, 165, 210, 40);
+        paramsPanel.add(numberOfAntsLabel);
+        // слайдер - общее количество муравьев
+        JSlider numberOfAntsSlider = new JSlider(JSlider.HORIZONTAL, 1000, 10000, antParams.second);
+        numberOfAntsSlider.setBounds(305, 175, 435, 40);
+        numberOfAntsSlider.setMajorTickSpacing(1000);
+        numberOfAntsSlider.setMinorTickSpacing(500);
+        numberOfAntsSlider.setPaintTicks(true);
+        numberOfAntsSlider.setPaintLabels(true);
+        numberOfAntsSlider.setFont(new Font("Arial", Font.PLAIN, 10));
+        numberOfAntsSlider.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
+        numberOfAntsSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        numberOfAntsSlider.setName("NumberOfAntsSlider");
+        numberOfAntsSlider.addChangeListener(this);
+        paramsPanel.add(numberOfAntsSlider);
+
 
         // кнопки
         JButton backButton = new JButton("В главное меню");
         backButton.setFont(new Font("Arial", Font.BOLD, 14));
-        backButton.setBounds(80, 490, 300, 60);
+        backButton.setBounds(100, 520, 230, 40);
         backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         backButton.setActionCommand("BackButton");
         backButton.addActionListener(this);
@@ -325,7 +380,7 @@ public class ParametersFrame extends JFrame
 
         showGraphButton = new JButton("Показать граф");
         showGraphButton.setFont(new Font("Arial", Font.BOLD, 14));
-        showGraphButton.setBounds(420, 490, 300, 60);
+        showGraphButton.setBounds(460, 520, 230, 40);
         if (!graph.isCreated()) {
             showGraphButton.setText("Показать граф (нет графа)");
             showGraphButton.setEnabled(false);
@@ -348,7 +403,7 @@ public class ParametersFrame extends JFrame
         disableHandEnterGraph();
     }
 
-    // заблокировать компоненты (radio button)
+    // заблокировать компоненты (радио кнопки)
     private void disableEnterFromFileGraph() {
         chooseFileButton.setEnabled(false);
         filePathTextField.setEnabled(false);
@@ -370,7 +425,7 @@ public class ParametersFrame extends JFrame
         handEnterGraphButton.setEnabled(false);
     }
 
-    // разблокировать компоненты (radio button)
+    // разблокировать компоненты (радио кнопки)
     private void enableEnterFromFileGraph() {
         chooseFileButton.setEnabled(true);
         filePathTextField.setEnabled(true);
@@ -396,30 +451,37 @@ public class ParametersFrame extends JFrame
     @Override
     public void stateChanged(ChangeEvent e) {
         Object source = e.getSource();
+        JSlider slider = (JSlider)source;
 
-        if (source instanceof JSlider) {
-            JSlider slider = (JSlider)source;
+        switch (slider.getName()) {
+            case"NumberOfVerticesSlider":
+                numberOfVertices = slider.getValue();
+                break;
 
-            switch (slider.getName()) {
-                case"NumberOfVerticesSlider":
-                    numberOfVertices = slider.getValue();
-                    break;
+            case "PercentOfEdgesSlider":
+                percentOfEdges = slider.getValue();
+                break;
 
-                case "PercentOfEdgesSlider":
-                    percentOfEdges = slider.getValue();
-                    break;
+            case "GreedOfAlgorithmSlider":
+                // делить на 100, т. к. целочисленная шкла
+                params.first = new Integer(slider.getValue()).doubleValue() / 100;
+                break;
 
-                case "GreedOfAlgorithmSlider":
-                    params.first = new Integer(slider.getValue()).doubleValue()/100;
-                    break;
+            case "RateOfEvaporationSlider":
+                // делить на 100, т. к. целочисленная шкла
+                params.second = new Integer(slider.getValue()).doubleValue() / 100;
+                break;
 
-                case "RateOfEvaporationSlider":
-                    params.second = new Integer(slider.getValue()).doubleValue()/100;
-                    break;
+            case "NumberOfRandomAntsSlider":
+                antParams.first = slider.getValue();
+                break;
 
-                default:
-                    break;
-            }
+            case "NumberOfAntsSlider":
+                antParams.second = slider.getValue();
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -478,8 +540,8 @@ public class ParametersFrame extends JFrame
 
             // кнопки
             case "ChooseFileButton":
-                int returnVal = fileChooser.showOpenDialog(this);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                int isFileOpen = fileChooser.showOpenDialog(this);
+                if (isFileOpen == JFileChooser.APPROVE_OPTION) {
                     file = fileChooser.getSelectedFile();
                     filePathTextField.setText(file.getPath());
                     createGraphFromFileButton.setEnabled(true);
@@ -502,8 +564,8 @@ public class ParametersFrame extends JFrame
                 break;
 
             case "CreateGraphGenerateButton":
-                graph.createGraph(numberOfVertices);
-                graph.generateGraph(percentOfEdges, rangeOfWeights.first, rangeOfWeights.second);
+                graph.generateGraph(numberOfVertices, percentOfEdges,
+                        rangeOfWeights.first, rangeOfWeights.second);
 
                 showGraphButton.setText("Показать граф");
                 showGraphButton.setEnabled(true);
@@ -519,7 +581,8 @@ public class ParametersFrame extends JFrame
                 break;
 
             case "BackButton":
-                dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                setVisible(false);
+                dispose();
                 mainMenuFrame.setVisible(true);
                 break;
 

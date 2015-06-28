@@ -14,7 +14,7 @@ public class Graph {
         linksMatrix = null;
     }
 
-    public void createGraph(int n) {     // create graph
+    private void createGraph(int n) {     // create graph
         numberOfVertices = n;
         adjacencyMatrix = new int[n][n];
         linksMatrix = new boolean[n][n];
@@ -24,16 +24,20 @@ public class Graph {
         return numberOfVertices != 0;
     }
 
-    private void makeWarshallAlgorithm(){       // Warshall algorithm
+    private void makeWarshallAlgorithm() {       // Warshall algorithm
         for (int k = 0; k < numberOfVertices; ++k)
             for (int i = 0; i < numberOfVertices; ++i)
                 for (int j = 0; j < numberOfVertices; ++j)
-                    linksMatrix[i][j] = linksMatrix[i][j] || (linksMatrix[i][j] && linksMatrix[i][j]);
+                    linksMatrix[i][j] = linksMatrix[i][j] || (linksMatrix[i][k] && linksMatrix[k][j]);
+
+        for (int i = 0; i < numberOfVertices; ++i)
+            linksMatrix[i][i] = false;
     }
 
-    public void generateGraph(int linksPercent,
-                              int leftBound,
-                              int rightBound) { // Graph generation
+    public void generateGraph(int numberOfVertices, int linksPercent,
+                              int leftBound, int rightBound) { // Graph generation
+
+        createGraph(numberOfVertices);
 
         Random rand = new Random();             // random generator
 
@@ -76,7 +80,7 @@ public class Graph {
                 adjacencyMatrix[j][i] = adjacencyMatrix[i][j];
             }
 
-        this.makeWarshallAlgorithm();                        // WarshallAlgorithm
+        makeWarshallAlgorithm();                        // WarshallAlgorithm
     }
 
     public boolean createGraphFromFile(Scanner input) {      // create graph from file
@@ -115,11 +119,12 @@ public class Graph {
                     adjacencyMatrix[i][j] = massOfDigits[i * numberOfElements + j];
                     linksMatrix[i][j] = adjacencyMatrix[i][j] != 0;
                 }
-            this.makeWarshallAlgorithm();
 
-            return true;
+            makeWarshallAlgorithm();
+
+            return true; // graph created
         }
 
-        return false;
+        return false;  // graph is not created
     }
 }

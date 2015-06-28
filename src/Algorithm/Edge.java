@@ -1,17 +1,18 @@
 package Algorithm;
 
+// ребро
 public class Edge {
     public double pheromone;
     public int weight;
-    public int firstNode;
-    public int secondNode;
-    public boolean inCurrentPath;
+    public int firstNode;         // от вершины
+    public int secondNode;        // до вершины
+    public boolean inCurrentPath; // принадлежность к пути
 
-    public Edge(int w, int first, int second){
+    public Edge(int weight_, int firstNode_, int secondNode_) {
         pheromone = 0.0;
-        weight = w;
-        firstNode = first;
-        secondNode = second;
+        weight = weight_;
+        firstNode = firstNode_;
+        secondNode = secondNode_;
         inCurrentPath = false;
     }
 }
