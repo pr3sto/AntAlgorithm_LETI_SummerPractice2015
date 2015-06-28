@@ -28,6 +28,8 @@ public class MainMenuFrame extends JFrame implements ActionListener {
     public MainMenuFrame() {
         super("Главное меню");
 
+        parametersFrame.setVisible(false);
+
         // окно
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(800, 600));
