@@ -234,6 +234,16 @@ public class ParametersFrame extends JFrame
         rangeFromField.addPropertyChangeListener(this);
         enterGraphPanel.add(rangeFromField);
 
+        rangeFromField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent fe) { }
+            public void focusLost(FocusEvent fe) {
+                try {
+                    if (Integer.parseInt(rangeFromField.getText()) > Integer.parseInt(rangeToField.getText()))
+                        rangeToField.setValue(100);
+                } catch (Exception e1) {}
+            }
+        });
+
         // до
         rangeToLabel = new JLabel("До:");
         rangeToLabel.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -247,6 +257,16 @@ public class ParametersFrame extends JFrame
         rangeToField.setName("RangeToField");
         rangeToField.addPropertyChangeListener(this);
         enterGraphPanel.add(rangeToField);
+
+        rangeToField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent fe) { }
+            public void focusLost(FocusEvent fe) {
+                try {
+                    if (Integer.parseInt(rangeFromField.getText()) > Integer.parseInt(rangeToField.getText()))
+                        rangeFromField.setValue(1);
+                } catch (Exception e1) {}
+            }
+        });
 
         // кнопка "создать граф - генерация"
         createGraphGenerateButton = new JButton("Создать граф");
@@ -493,18 +513,12 @@ public class ParametersFrame extends JFrame
             case "RangeFromField":
                 try {
                     rangeOfWeights.first = Integer.parseInt(rangeFromField.getText());
-                    if (Integer.parseInt(rangeFromField.getText()) > Integer.parseInt(rangeToField.getText())) {
-                        rangeToField.setValue(100);
-                    }
                 } catch (Exception e1) { }
                 break;
 
             case "RangeToField":
                 try {
                     rangeOfWeights.second = Integer.parseInt(rangeToField.getText());
-                    if (Integer.parseInt(rangeFromField.getText()) > Integer.parseInt(rangeToField.getText())) {
-                        rangeFromField.setValue(1);
-                    }
                 } catch (Exception e1) { }
                 break;
         }
@@ -564,6 +578,9 @@ public class ParametersFrame extends JFrame
                 break;
 
             case "CreateGraphGenerateButton":
+                rangeOfWeights.first = Integer.parseInt(rangeFromField.getText());
+                rangeOfWeights.second = Integer.parseInt(rangeToField.getText());
+
                 graph.generateGraph(numberOfVertices, percentOfEdges,
                         rangeOfWeights.first, rangeOfWeights.second);
 

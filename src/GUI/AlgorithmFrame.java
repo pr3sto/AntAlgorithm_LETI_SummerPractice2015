@@ -170,9 +170,14 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         startVertexComboBox = new JComboBox();
         startVertexComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
         startVertexComboBox.setBounds(20, 40, 240, 30);
+        // заполнение списка
         for(int i = 0; i < graph.numberOfVertices; ++i)
-            startVertexComboBox.addItem(Graph.alphabet[i]);
-        startVertexComboBox.setSelectedIndex(0);
+            for(int j = 0; j < graph.numberOfVertices; ++j)
+                if (graph.linksMatrix[i][j]) {
+                    startVertexComboBox.addItem(Graph.alphabet[i]);
+                    break;
+                }
+        if (startVertexComboBox.getItemCount() != 0) startVertexComboBox.setSelectedIndex(0);
         startVertexComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         startVertexComboBox.setName("StartVertexComboBox");
         startVertexComboBox.addActionListener(this);
@@ -186,8 +191,15 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         endVertexComboBox = new JComboBox();
         endVertexComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
         endVertexComboBox.setBounds(20, 110, 240, 30);
+        // заполнение списка
+        int index = 0;
+        for (int i = 0; i < Graph.alphabet.length; i++)
+            if (startVertexComboBox.getSelectedItem() == Graph.alphabet[i]) {
+                index = i;
+                break;
+            }
         for(int i = 0; i < graph.numberOfVertices; ++i)
-            if (graph.linksMatrix[0][i])
+            if (graph.linksMatrix[index][i])
                 endVertexComboBox.addItem(Graph.alphabet[i]);
         if (endVertexComboBox.getItemCount() != 0) endVertexComboBox.setSelectedIndex(0);
         endVertexComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -299,10 +311,15 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
 
             switch (cmd) {
                 case "StartVertexComboBox":
-                    int index1 = cb.getSelectedIndex();
                     endVertexComboBox.removeAllItems();
+                    int index = 0;
+                    for (int i = 0; i < Graph.alphabet.length; i++)
+                        if (startVertexComboBox.getSelectedItem() == Graph.alphabet[i]) {
+                            index = i;
+                            break;
+                        }
                     for(int i = 0; i < graph.numberOfVertices; ++i)
-                        if (graph.linksMatrix[index1][i])
+                        if (graph.linksMatrix[index][i])
                             endVertexComboBox.addItem(Graph.alphabet[i]);
                     setAlgorithm(); // алгоритм
                     break;

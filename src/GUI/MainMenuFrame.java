@@ -23,6 +23,8 @@ public class MainMenuFrame extends JFrame implements ActionListener {
     // окно параметров создается один раз (для сохранения параметров при деактивации окна)
     private ParametersFrame parametersFrame = new ParametersFrame(this, graph, params, antParams);
 
+    private JButton startButton;
+
     // конструктор
     public MainMenuFrame() {
         super("Главное меню");
@@ -60,7 +62,7 @@ public class MainMenuFrame extends JFrame implements ActionListener {
         buttonPanel.setBounds(230, 240, 340, 315);
 
         // кнопки
-        JButton startButton = new JButton("Запуск алгоритма");
+        startButton = new JButton("Запуск алгоритма");
         startButton.setFont(new Font("Arial", Font.BOLD, 14));
         startButton.setBounds(20, 20, 300, 60);
         startButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -150,17 +152,19 @@ public class MainMenuFrame extends JFrame implements ActionListener {
     // main
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(() -> {
-            // изменить стиль окна
-            try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-            } catch (Exception e1) {
-                JOptionPane.showMessageDialog(null,
-                        "Error while changing Look and Feel!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                // изменить стиль окна
+                try {
+                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null,
+                            "Error while changing Look and Feel!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
 
-            // показать главное окно
-            new MainMenuFrame();
+                // показать главное окно
+                new MainMenuFrame();
+            }
         });
     }
 }

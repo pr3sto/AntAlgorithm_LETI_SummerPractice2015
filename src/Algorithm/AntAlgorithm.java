@@ -97,7 +97,6 @@ public class AntAlgorithm {
                     if ((i.firstNode == Math.min(currentIndex, wayN.get(wayN.size() - 2)))
                             && (i.secondNode == Math.max(currentIndex, wayN.get(wayN.size() - 2)))) {
                         wayE.add(i);
-                        //i.inCurrentPath = true;
                         break;
                     }
             }
@@ -164,6 +163,15 @@ public class AntAlgorithm {
                     probability.add(k);
                 }
 
+                if (sum == 0.0) {
+                    bannedN.add(currentIndex);
+                    currentIndex = wayN.get(wayN.size() - 2);
+                    wayN.remove(wayN.size() - 1);
+                    wayE.remove(wayE.size() - 1);
+                    possibleNN.clear();
+                    continue;
+                }
+
                 for (int i = 0; i < probability.size(); ++i) {
                     double temp = probability.get(i);
                     probability.set(i, temp/sum);
@@ -198,7 +206,6 @@ public class AntAlgorithm {
                     if ( (i.firstNode == Math.min(currentIndex, wayN.get(wayN.size() - 1)) )
                             && (i.secondNode == Math.max(currentIndex, wayN.get(wayN.size() - 1)) ) ){
                         wayE.add(i);
-                        //i.inCurrentPath = true;
                         break;
                     }
 
