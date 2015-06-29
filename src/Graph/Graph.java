@@ -64,7 +64,7 @@ public class Graph {
 
         int centerOfPanelX = 342;
         int centerOfPanelY = 330;
-        int distanceToCenterOfVertex = 290;
+        int distanceToCenterOfVertex = 270;
 
         // координаты вершины
         int vertexX = centerOfPanelX;

@@ -54,7 +54,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                 int y =  graph.vertices.get(i).coordY;
                 String name = String.valueOf(graph.vertices.get(i).name);
 
-                g.drawOval(x - 20, y - 20, 40, 40);
+                g.drawOval(x - 25, y - 25, 50, 50);
                 g.setFont(new Font("Arial", Font.BOLD, 20));
                 g.drawString(name, x - 7, y + 5);
             }
@@ -66,19 +66,19 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                 int x2 = graph.vertices.get(graph.edges.get(i).secondNode).coordX;
                 int y2 = graph.vertices.get(graph.edges.get(i).secondNode).coordY;
 
-                int x11= (int)(x1 + 20 * (x2 - x1) /
+                int x11= (int)(x1 + 25 * (x2 - x1) /
                         Math.sqrt(Math.pow((double)(x2 - x1), 2.0)
                                 + Math.pow((double)(y2 - y1), 2.0)));
 
-                int y11 = (int)(y1 + 20 * (y2 - y1) /
+                int y11 = (int)(y1 + 25 * (y2 - y1) /
                         Math.sqrt(Math.pow((double)(x2 - x1), 2.0)
                                 + Math.pow((double)(y2 - y1), 2.0)));
 
-                int x22 = (int)(x2 + 20 * (x1 - x2) /
+                int x22 = (int)(x2 + 25 * (x1 - x2) /
                         Math.sqrt(Math.pow((double)(x1 - x2), 2.0)
                                 + Math.pow((double)(y1 - y2), 2.0)));
 
-                int y22 = (int)(y2 + 20 * (y1 - y2) /
+                int y22 = (int)(y2 + 25 * (y1 - y2) /
                         Math.sqrt(Math.pow((double)(x1 - x2), 2.0)
                                 + Math.pow((double)(y1 - y2), 2.0)));
 

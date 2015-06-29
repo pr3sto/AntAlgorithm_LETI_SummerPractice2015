@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 
 import Graph.Graph;
 import Staff.Pair;
+import GUI.GraphEnter.GraphEnterFrame;
 
 // окно "параметры"
 public class ParametersFrame extends JFrame
@@ -125,10 +126,6 @@ public class ParametersFrame extends JFrame
         handEnterGraphRadioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         handEnterGraphRadioButton.setActionCommand("HandEnterRadioButton");
         handEnterGraphRadioButton.addActionListener(this);
-
-        // ---------------------------------------- для первой версии -------------------------------------------------
-        handEnterGraphRadioButton.setEnabled(false);
-        // ------------------------------------------------------------------------------------------------------------
 
         // группа кнопок выбора
         ButtonGroup enterGraphGroup = new ButtonGroup();
@@ -596,9 +593,13 @@ public class ParametersFrame extends JFrame
                 break;
 
             case "EnterGraphButton":
+                new GraphEnterFrame(this);
+                setVisible(false);
                 break;
 
             case "ShowGraphButton":
+                new GraphEnterFrame(this, graph);
+                setVisible(false);
                 break;
 
             case "BackButton":
