@@ -64,7 +64,7 @@ public class Graph {
 
         int centerOfPanelX = 342;
         int centerOfPanelY = 330;
-        int distanceToCenterOfVertex = 270;
+        int distanceToCenterOfVertex = 290;
 
         // координаты вершины
         int vertexX = centerOfPanelX;
@@ -77,7 +77,7 @@ public class Graph {
         double tempX, tempY;
 
         for(int i = 0; i < numberOfVertices ; ++i) {
-            vertices.add(new Vertex(vertexX, vertexY, alphabet[i]));
+            vertices.add(new Vertex(vertexX - 25, vertexY - 25, alphabet[i]));
 
             polarX = 1 * Math.cos(Math.acos(-1.0) * 2 / numberOfVertices);
             polarY = 1 * Math.sin(Math.acos(-1.0) * 2 / numberOfVertices);

@@ -31,6 +31,8 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
 
     // кнопка "авто"
     private JButton autoStepButton;
+    // кнопка "следующий шаг"
+    private JButton nextStepButton;
 
     // путь муравья
     private JLabel pathOfAntLabel;
@@ -54,17 +56,17 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                 int y =  graph.vertices.get(i).coordY;
                 String name = String.valueOf(graph.vertices.get(i).name);
 
-                g.drawOval(x - 25, y - 25, 50, 50);
+                g.drawOval(x, y, 50, 50);
                 g.setFont(new Font("Arial", Font.BOLD, 20));
-                g.drawString(name, x - 7, y + 5);
+                g.drawString(name, x + 20, y + 30);
             }
 
             // ребра
             for (int i = 0; i < graph.edges.size(); i++) {
-                int x1 = graph.vertices.get(graph.edges.get(i).firstNode).coordX;
-                int y1 = graph.vertices.get(graph.edges.get(i).firstNode).coordY;
-                int x2 = graph.vertices.get(graph.edges.get(i).secondNode).coordX;
-                int y2 = graph.vertices.get(graph.edges.get(i).secondNode).coordY;
+                int x1 = graph.vertices.get(graph.edges.get(i).firstNode).coordX + 25;
+                int y1 = graph.vertices.get(graph.edges.get(i).firstNode).coordY + 25;
+                int x2 = graph.vertices.get(graph.edges.get(i).secondNode).coordX + 25;
+                int y2 = graph.vertices.get(graph.edges.get(i).secondNode).coordY + 25;
 
                 int x11= (int)(x1 + 25 * (x2 - x1) /
                         Math.sqrt(Math.pow((double)(x2 - x1), 2.0)
@@ -210,17 +212,13 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         setAlgorithm(); // настроить алгоритм под списки вершин
 
         // кнопки
-        JButton nextStepButton = new JButton("Следующий шаг");
+        nextStepButton = new JButton("Следующий шаг");
         nextStepButton.setFont(new Font("Arial", Font.BOLD, 14));
         nextStepButton.setBounds(20, 200, 240, 60);
         nextStepButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         nextStepButton.setActionCommand("NextStepButton");
         nextStepButton.addActionListener(this);
         sidePanel.add(nextStepButton);
-
-        // ---------------------------------------- для первой версии -------------------------------------------------
-        nextStepButton.setEnabled(false);
-        // ------------------------------------------------------------------------------------------------------------
 
         autoStepButton = new JButton("Авто");
         autoStepButton.setFont(new Font("Arial", Font.BOLD, 14));
@@ -343,6 +341,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                 case "AutoStepButton":
                     disableComboBoxes();
                     autoStepButton.setEnabled(false);
+                    nextStepButton.setEnabled(false);
                     List<Integer> pathOfAnt = algorithm.autoAlgorithm();
                     showPathOfAnt(pathOfAnt);
                     break;
@@ -351,6 +350,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                     enableComboBoxes();
                     pathOfAntLabel.setText("");
                     autoStepButton.setEnabled(true);
+                    nextStepButton.setEnabled(true);
                     setAlgorithm();
                     break;
 

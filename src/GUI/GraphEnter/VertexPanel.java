@@ -4,17 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 
 public class VertexPanel extends JPanel {
-    private int imX = 0;
-    private int imY = 0;
+    private int X = 0;
+    private int Y = 0;
 
-    private JLabel name; // название
-
-    public static char[] alphabet = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
+    private JLabel letter; // название
 
     public VertexPanel(int x, int y)
     {
-        imX = x;
-        imY = y;
+        X = x;
+        Y = y;
 
         setLayout(null);
         setBounds(x, y, 50, 50);
@@ -27,26 +25,28 @@ public class VertexPanel extends JPanel {
         add(picLabel);
 
         // название
-        name = new JLabel("A");
-        name.setBounds(20,15,20,20);
-        add(name);
+        letter = new JLabel("A");
+        letter.setBounds(20,15,20,20);
+        add(letter);
     }
 
-    public int GetX(){
-        return imX;
+    public int getX(){
+        return X;
     }
 
-    public int GetY(){
-        return imY;
+    public int getY(){
+        return Y;
     }
 
-    public void SetX(int x0){
-        imX = x0;
+    public void setX(int x0){
+        X = x0;
     }
 
-    public void SetY(int y0){
-        imY = y0;
+    public void setY(int y0){
+        Y = y0;
     }
 
-    public void SetName(char n) { name.setText(Character.toString(n)); }
+    public void setLetter(char n) {
+        letter.setText(Character.toString(n));
+    }
 }

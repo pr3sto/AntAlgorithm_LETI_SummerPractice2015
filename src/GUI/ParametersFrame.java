@@ -593,7 +593,7 @@ public class ParametersFrame extends JFrame
                 break;
 
             case "EnterGraphButton":
-                new GraphEnterFrame(this);
+                new GraphEnterFrame(this, graph);
                 setVisible(false);
                 break;
 
