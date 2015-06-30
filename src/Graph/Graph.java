@@ -52,6 +52,14 @@ public class Graph {
         return numberOfVertices != 0;
     }
 
+    public void deleteGraph() {
+        numberOfVertices = 0;
+        adjacencyMatrix = null;
+        linksMatrix = null;
+        edges = null;
+        vertices = null;
+    }
+
     private void createMatrix(int n) {     // create graph
         numberOfVertices = n;
         adjacencyMatrix = new int[n][n];
@@ -114,6 +122,8 @@ public class Graph {
     public void generateGraph(int numberOfVertices, int linksPercent,
                               int leftBound, int rightBound) { // Graph generation
 
+        deleteGraph();
+
         createMatrix(numberOfVertices);
 
         Random rand = new Random();             // random generator
@@ -163,6 +173,9 @@ public class Graph {
     }
 
     public boolean createGraphFromFile(Scanner input) {      // create graph from file
+
+        deleteGraph();
+
         int[] massOfDigits = new int[100];
         int numberOfDigits = 0;
 
@@ -207,5 +220,25 @@ public class Graph {
         }
 
         return false;  // graph is not created
+    }
+
+    public void createMatrixFromEdgesAndVertices() {
+        adjacencyMatrix = new int[numberOfVertices][numberOfVertices];
+        linksMatrix = new boolean[numberOfVertices][numberOfVertices];
+
+        for (int i = 0; i < numberOfVertices; ++i)
+            for (int j = 0; j < numberOfVertices; ++j) {
+                adjacencyMatrix[i][j] = 0;
+                linksMatrix[i][j] = false;
+            }
+
+        for (Edge i : edges) {
+            adjacencyMatrix[i.firstNode][i.secondNode] = i.weight;
+            adjacencyMatrix[i.secondNode][i.firstNode] = i.weight;
+            linksMatrix[i.firstNode][i.secondNode] = true;
+            linksMatrix[i.secondNode][i.firstNode] = true;
+        }
+
+        makeWarshallAlgorithm();
     }
 }

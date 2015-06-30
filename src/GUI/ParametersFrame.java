@@ -79,14 +79,22 @@ public class ParametersFrame extends JFrame
         setResizable(false);
         setLayout(null);
 
-        // действие при закрытии окна
+        // действие при закрытии и открытии окна
         addWindowListener(new WindowListener() {
             public void windowClosing(WindowEvent event) {
                 event.getWindow().setVisible(false);
                 event.getWindow().dispose();
                 mainMenuFrame.setVisible(true);
             }
-            public void windowActivated(WindowEvent event) { }
+            public void windowActivated(WindowEvent event) {
+                if (graph.isCreated()) {
+                    showGraphButton.setText("Показать граф");
+                    showGraphButton.setEnabled(true);
+                } else {
+                    showGraphButton.setText("Показать граф (нет графа)");
+                    showGraphButton.setEnabled(false);
+                }
+            }
             public void windowClosed(WindowEvent event) { }
             public void windowDeactivated(WindowEvent event) { }
             public void windowDeiconified(WindowEvent event) { }
@@ -571,7 +579,9 @@ public class ParametersFrame extends JFrame
                         JOptionPane.showMessageDialog(null,
                                 "Невозможно считать граф из файла!", "Ошибка", JOptionPane.ERROR_MESSAGE);
                     }
-                } catch (FileNotFoundException e1) { }
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                }
                 break;
 
             case "CreateGraphGenerateButton":
@@ -593,6 +603,7 @@ public class ParametersFrame extends JFrame
                 break;
 
             case "EnterGraphButton":
+                graph.deleteGraph();
                 new GraphEnterFrame(this, graph);
                 setVisible(false);
                 break;

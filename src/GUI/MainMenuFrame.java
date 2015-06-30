@@ -152,19 +152,17 @@ public class MainMenuFrame extends JFrame implements ActionListener {
     // main
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                // изменить стиль окна
-                try {
-                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-                } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null,
-                            "Error while changing Look and Feel!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-
-                // показать главное окно
-                new MainMenuFrame();
+        SwingUtilities.invokeLater(() -> {
+            // изменить стиль окна
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            } catch (Exception e1) {
+                JOptionPane.showMessageDialog(null,
+                        "Error while changing Look and Feel!", "Error", JOptionPane.ERROR_MESSAGE);
             }
+
+            // показать главное окно
+            new MainMenuFrame();
         });
     }
 }
