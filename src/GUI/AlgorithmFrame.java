@@ -10,7 +10,7 @@ import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
 
 import Algorithm.AntAlgorithm;
-import Graph.Graph;
+import Graph.*;
 import Staff.Pair;
 
 // окно "алгоритм"
@@ -37,6 +37,8 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
     // путь муравья
     private JLabel pathOfAntLabel;
 
+    GraphPanel graphPanel;
+
     // панель с графом
     class GraphPanel extends JPanel {
 
@@ -47,15 +49,26 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
             setBorder(graphPanelTitle);
         }
 
+        final  BasicStroke stroke_3 = new BasicStroke(3.0f);
+        final  BasicStroke stroke_7 = new BasicStroke(7.0f);
+        final  BasicStroke stroke_5 = new BasicStroke(5.0f);
+        final  BasicStroke stroke_11 = new BasicStroke(11.0f);
+        final  BasicStroke wideStroke = new BasicStroke(8.0f);
+
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
+
+            Graphics2D g2 = (Graphics2D)g;
+
+            //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             // вершины
             for (int i = 0; i < graph.numberOfVertices; i++) {
                 int x = graph.vertices.get(i).coordX;
                 int y =  graph.vertices.get(i).coordY;
-                String name = String.valueOf(graph.vertices.get(i).name);
+                String name = String.valueOf(graph.vertices.get(i).letter);
 
+                g2.setStroke(stroke_5);
                 g.drawOval(x, y, 50, 50);
                 g.setFont(new Font("Arial", Font.BOLD, 20));
                 g.drawString(name, x + 20, y + 30);
@@ -68,23 +81,62 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                 int x2 = graph.vertices.get(graph.edges.get(i).secondNode).coordX + 25;
                 int y2 = graph.vertices.get(graph.edges.get(i).secondNode).coordY + 25;
 
-                int x11= (int)(x1 + 25 * (x2 - x1) /
+                int x11= (int)(x1 + 29 * (x2 - x1) /
                         Math.sqrt(Math.pow((double)(x2 - x1), 2.0)
                                 + Math.pow((double)(y2 - y1), 2.0)));
 
-                int y11 = (int)(y1 + 25 * (y2 - y1) /
+                int y11 = (int)(y1 + 29 * (y2 - y1) /
                         Math.sqrt(Math.pow((double)(x2 - x1), 2.0)
                                 + Math.pow((double)(y2 - y1), 2.0)));
 
-                int x22 = (int)(x2 + 25 * (x1 - x2) /
+                int x22 = (int)(x2 + 29 * (x1 - x2) /
                         Math.sqrt(Math.pow((double)(x1 - x2), 2.0)
                                 + Math.pow((double)(y1 - y2), 2.0)));
 
-                int y22 = (int)(y2 + 25 * (y1 - y2) /
+                int y22 = (int)(y2 + 29 * (y1 - y2) /
                         Math.sqrt(Math.pow((double)(x1 - x2), 2.0)
                                 + Math.pow((double)(y1 - y2), 2.0)));
 
-                g.drawLine(x11, y11, x22, y22);
+                g2.setStroke(stroke_11);
+                g2.setColor(Color.gray);
+                g2.drawLine(x11, y11, x22, y22);
+                g2.setStroke(stroke_7);
+                g2.setColor(Color.white);
+                g2.drawLine(x11, y11, x22, y22);
+
+
+                   /* double maxPheromone = 0.0;
+                for (Edge e : graph.edges)
+                    //maxPheromone += e.pheromone;
+                    maxPheromone = Math.max(maxPheromone, e.pheromone);
+
+                int green;
+                int blue;
+
+                if (maxPheromone == 0.0) {
+                    green = 255;
+                    blue = 255;
+                } else {
+                    green = (int)((graph.edges.get(i).pheromone <= maxPheromone / 2.0) ? 255.0 : 255.0 - graph.edges.get(i).pheromone / maxPheromone * 255.0);
+                    blue = (int)((graph.edges.get(i).pheromone >= maxPheromone / 2.0) ? 0.0 : 255.0 - graph.edges.get(i).pheromone / maxPheromone * 255.0);
+                }*/
+
+                int maxWeight = 0;
+                for (Edge e : graph.edges)
+                    //maxPheromone += e.pheromone;
+                    maxWeight = Math.max(maxWeight, e.weight);
+
+
+                int coef = (int)(algorithm.evaporationSpeed < 0.1 ? 1 : 10 * algorithm.evaporationSpeed);
+
+
+                int green = (int)Math.max(0.0, ((graph.edges.get(i).pheromone <= 0.25) ? 255 : 255 - (graph.edges.get(i).pheromone - 0.25) * maxWeight/10 * coef * 255));
+                int blue = (int)Math.max(0.0,((graph.edges.get(i).pheromone >= 0.25) ? 0 : 255 - graph.edges.get(i).pheromone * maxWeight/10 * coef * 255));
+                g2.setStroke(stroke_3);
+                g2.setColor(new Color(255, green, blue));
+                g2.drawLine(x11, y11, x22, y22);
+
+                System.out.println("g " + green + " b " + blue + "pher " + graph.edges.get(i).pheromone);
 
                 int x= (int)(x1 + 70 * (x2 - x1) /
                         Math.sqrt(Math.pow((double)(x2 - x1), 2.0)
@@ -95,10 +147,10 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                                 + Math.pow((double)(y2 - y1), 2.0)));
 
                 // вес
-                g.setColor(Color.RED);
-                g.setFont(new Font("Arial", Font.BOLD, 15));
-                g.drawString(String.valueOf(graph.edges.get(i).weight), x - 8, y + 8);
-                g.setColor(Color.BLACK);
+                g2.setColor(Color.RED);
+                g2.setFont(new Font("Arial", Font.BOLD, 20));
+                g2.drawString(String.valueOf(graph.edges.get(i).weight), x - 8, y + 8);
+                g2.setColor(Color.BLACK);
             }
         }
     }
@@ -126,12 +178,24 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                 event.getWindow().dispose();
                 mainMenuFrame.setVisible(true);
             }
-            public void windowActivated(WindowEvent event) { }
-            public void windowClosed(WindowEvent event) { }
-            public void windowDeactivated(WindowEvent event) { }
-            public void windowDeiconified(WindowEvent event) { }
-            public void windowIconified(WindowEvent event) { }
-            public void windowOpened(WindowEvent event) { }
+
+            public void windowActivated(WindowEvent event) {
+            }
+
+            public void windowClosed(WindowEvent event) {
+            }
+
+            public void windowDeactivated(WindowEvent event) {
+            }
+
+            public void windowDeiconified(WindowEvent event) {
+            }
+
+            public void windowIconified(WindowEvent event) {
+            }
+
+            public void windowOpened(WindowEvent event) {
+            }
         });
 
         // иконка
@@ -146,13 +210,15 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         add(antPathPanel);
 
         JLabel pathOfAntTextLabel = new JLabel("Найденный путь: ");
+        pathOfAntTextLabel.setHorizontalAlignment(JLabel.CENTER);
         pathOfAntTextLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        pathOfAntTextLabel.setBounds(20, 10, 150, 30);
+        pathOfAntTextLabel.setBounds(20, 10, 250, 30);
         antPathPanel.add(pathOfAntTextLabel);
 
         pathOfAntLabel = new JLabel();
         pathOfAntLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        pathOfAntLabel.setBounds(20, 30, 250, 30);
+        pathOfAntLabel.setHorizontalAlignment(JLabel.CENTER);
+        pathOfAntLabel.setBounds(20, 35, 250, 30);
         antPathPanel.add(pathOfAntLabel);
 
         // боковая панель
@@ -176,7 +242,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         for(int i = 0; i < graph.numberOfVertices; ++i)
             for(int j = 0; j < graph.numberOfVertices; ++j)
                 if (graph.linksMatrix[i][j]) {
-                    startVertexComboBox.addItem(Graph.alphabet[i]);
+                    startVertexComboBox.addItem(graph.vertices.get(i).letter);
                     break;
                 }
         if (startVertexComboBox.getItemCount() != 0) startVertexComboBox.setSelectedIndex(0);
@@ -195,14 +261,14 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         endVertexComboBox.setBounds(20, 110, 240, 30);
         // заполнение списка
         int index = 0;
-        for (int i = 0; i < Graph.alphabet.length; i++)
-            if (startVertexComboBox.getSelectedItem() == Graph.alphabet[i]) {
+        for (int i = 0; i < graph.vertices.size(); i++)
+            if (startVertexComboBox.getSelectedItem() == graph.vertices.get(i).letter) {
                 index = i;
                 break;
             }
         for(int i = 0; i < graph.numberOfVertices; ++i)
             if (graph.linksMatrix[index][i])
-                endVertexComboBox.addItem(Graph.alphabet[i]);
+                endVertexComboBox.addItem(graph.vertices.get(i).letter);
         if (endVertexComboBox.getItemCount() != 0) endVertexComboBox.setSelectedIndex(0);
         endVertexComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         endVertexComboBox.setName("EndVertexComboBox");
@@ -245,7 +311,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         sidePanel.add(backButton);
 
         // панель для графа
-        GraphPanel graphPanel = new GraphPanel();
+        graphPanel = new GraphPanel();
 
         add(sidePanel);
         add(graphPanel);
@@ -274,26 +340,34 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         Integer first = 0;
         Integer second = 0;
 
-        for (int i = 0; i < Graph.alphabet.length; i++) {
-            if (startVertexComboBox.getSelectedItem() == Graph.alphabet[i])
+        for (int i = 0; i < graph.vertices.size(); i++) {
+            if (startVertexComboBox.getSelectedItem() == graph.vertices.get(i).letter)
                 first = i;
-            if (endVertexComboBox.getSelectedItem() == Graph.alphabet[i])
+            if (endVertexComboBox.getSelectedItem() == graph.vertices.get(i).letter)
                 second = i;
         }
 
         Pair<Integer, Integer> path = new Pair<>(first, second);
+
+        graph.removePheromone();
 
         algorithm = new AntAlgorithm(new Graph(graph), params.first, params.second,
                 antParams.first, antParams.second, path);
     }
 
     private void showPathOfAnt(List<Integer> pathOfAnt) {
-        String path = "";
+        String path = "<html><p align=\"center\">";
+
+        int weight = pathOfAnt.get(pathOfAnt.size()-1);
+
+        pathOfAnt.remove(pathOfAnt.size() - 1);
 
         for (Integer i : pathOfAnt) {
-            if (!path.equals("")) path += " - ";
-            path += Graph.alphabet[i];
+            if (!path.equals("<html><p align=\"center\">")) path += " - ";
+            path += graph.vertices.get(i).letter;
         }
+
+        path += "<br>Вес пути: " + String.valueOf(weight) + "</p><html>";
 
         pathOfAntLabel.setText(path);
     }
@@ -311,14 +385,14 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                 case "StartVertexComboBox":
                     endVertexComboBox.removeAllItems();
                     int index = 0;
-                    for (int i = 0; i < Graph.alphabet.length; i++)
-                        if (startVertexComboBox.getSelectedItem() == Graph.alphabet[i]) {
+                    for (int i = 0; i < graph.vertices.size(); i++)
+                        if (startVertexComboBox.getSelectedItem() == graph.vertices.get(i).letter) {
                             index = i;
                             break;
                         }
                     for(int i = 0; i < graph.numberOfVertices; ++i)
                         if (graph.linksMatrix[index][i])
-                            endVertexComboBox.addItem(Graph.alphabet[i]);
+                            endVertexComboBox.addItem(graph.vertices.get(i).letter);
                     setAlgorithm(); // алгоритм
                     break;
 
@@ -336,6 +410,14 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
             switch(cmd) {
                 case "NextStepButton":
                     disableComboBoxes();
+                    if (algorithm.finished()) {
+                        autoStepButton.setEnabled(false);
+                        nextStepButton.setEnabled(false);
+                        List<Integer> pathOfAnt = algorithm.findPath();
+                        showPathOfAnt(pathOfAnt);
+                    } else algorithm.step();
+
+                    graphPanel.repaint();
                     break;
 
                 case "AutoStepButton":
@@ -343,6 +425,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                     autoStepButton.setEnabled(false);
                     nextStepButton.setEnabled(false);
                     List<Integer> pathOfAnt = algorithm.autoAlgorithm();
+                    graphPanel.repaint();
                     showPathOfAnt(pathOfAnt);
                     break;
 
@@ -352,6 +435,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                     autoStepButton.setEnabled(true);
                     nextStepButton.setEnabled(true);
                     setAlgorithm();
+                    graphPanel.repaint();
                     break;
 
                 case "BackButton":

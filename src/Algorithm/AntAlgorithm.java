@@ -11,7 +11,7 @@ public class AntAlgorithm {
     private Graph graph;                // graph
     private double greed;               // жадность алгоритма - больше влияет длина ребра
     private double gregariousness;      // стадность алгоритма - больше влияет кол-во феромонов
-    private double evaporationSpeed;    // скорость испарения
+    public double evaporationSpeed;    // скорость испарения
     private int count;                  // steps counter
     private int startIndex;             // starting node index
     private int finishIndex;            // finish node index
@@ -48,6 +48,10 @@ public class AntAlgorithm {
         finishIndex = path.second;
 
         count = 0;
+    }
+
+    public boolean finished() {
+        return count == numberOfAnts;
     }
 
     public void step() {
@@ -239,12 +243,16 @@ public class AntAlgorithm {
         while (count <= numberOfAnts)
             step();
 
-        // find way
+        return findPath();
+    }
+
+    public List<Integer> findPath() {
         List<Integer> nodesInPath = new ArrayList<>();
         List<Edge> probEdges = new ArrayList<>();
         nodesInPath.add(startIndex);
         List<Edge> banned = new ArrayList<>();
         currentIndex = startIndex;
+        int wayWeight = 0;                  // weight of way
 
         while (currentIndex != finishIndex) {
             for (Edge i : graph.edges)
@@ -254,7 +262,7 @@ public class AntAlgorithm {
                         if (k == i)
                             ok = false;
                     if (ok)
-                    probEdges.add(i);
+                        probEdges.add(i);
                 }
 
             Edge edge = probEdges.get(0);
@@ -265,6 +273,8 @@ public class AntAlgorithm {
             banned.add(edge);
             probEdges.clear();
 
+            wayWeight += edge.weight;
+
             if (edge.firstNode == currentIndex)
                 nodesInPath.add(edge.secondNode);
             else
@@ -272,6 +282,8 @@ public class AntAlgorithm {
 
             currentIndex = nodesInPath.get(nodesInPath.size() - 1);
         }
+
+        nodesInPath.add(wayWeight);
 
         return nodesInPath; // path of ant
     }

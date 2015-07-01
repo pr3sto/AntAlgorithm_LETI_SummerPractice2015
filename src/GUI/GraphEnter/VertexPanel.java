@@ -39,8 +39,7 @@ public class VertexPanel extends JPanel {
     }
 
     public Character getLetter() {
-        char[] tmp = letter.getText().toCharArray();
-        return tmp[0];
+        return letter.getText().toCharArray()[0];
     }
 
     public void setX(int x0){

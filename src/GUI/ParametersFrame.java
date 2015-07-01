@@ -609,7 +609,7 @@ public class ParametersFrame extends JFrame
                 break;
 
             case "ShowGraphButton":
-                new GraphEnterFrame(this, graph);
+                new ShowGraphFrame(this, graph);
                 setVisible(false);
                 break;
 

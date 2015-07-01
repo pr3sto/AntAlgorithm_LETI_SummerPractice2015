@@ -46,6 +46,7 @@ public class GraphEnterFrame extends JFrame
     boolean check = false;
 
     boolean interrupt = false; // для закрытия потока
+    boolean removeEdges = false;
 
     VertexPanel[] vertices = new VertexPanel[10];   // вершины
     Pair<Integer, Integer>[] edges = new Pair[100]; // ребра
@@ -193,6 +194,14 @@ public class GraphEnterFrame extends JFrame
             while(!interrupt) {
                 int free = 0;
 
+                while (removeEdges) {
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 Graphics gr = graphPanel.getGraphics();
 
                 // задержка для прорисовки
@@ -280,7 +289,7 @@ public class GraphEnterFrame extends JFrame
             // вершины
             for (int i = 0; i < graph.numberOfVertices; i++) {
                 vertices[i] = new VertexPanel(graph.vertices.get(i).coordX, graph.vertices.get(i).coordY);
-                vertices[i].setLetter(graph.vertices.get(i).name);
+                vertices[i].setLetter(graph.vertices.get(i).letter);
                 vertices[i].setName(String.valueOf(i));
                 vertices[i].addMouseMotionListener(this);
                 vertices[i].addMouseListener(this);
@@ -328,6 +337,8 @@ public class GraphEnterFrame extends JFrame
 
     public void mouseClicked(MouseEvent e) {
         if(btnDelPressed) {
+            removeEdges = true;
+
             Object ob = e.getSource();
             VertexPanel vertex = (VertexPanel) ob;
             int count = Integer.parseInt(vertex.getName());
@@ -345,6 +356,8 @@ public class GraphEnterFrame extends JFrame
                     }
             }
 
+            removeEdges = false;
+
             graphPanel.repaint();
             btnDelPressed = false;
 
@@ -354,6 +367,8 @@ public class GraphEnterFrame extends JFrame
         }
 
         if(btnAddEdgePressed) {
+            removeEdges = true;
+
             if(btnConfirmPressed) {
                 Object ob = e.getSource();
                 VertexPanel vertex = (VertexPanel) ob;
@@ -410,9 +425,13 @@ public class GraphEnterFrame extends JFrame
 
                 }
             }
+
+            removeEdges = false;
         }
 
         if (btnDelEdgePressed) {
+            removeEdges = true;
+
             Object ob = e.getSource();
             VertexPanel vertex = (VertexPanel) ob;
             int count = Integer.parseInt(vertex.getName());
@@ -449,11 +468,13 @@ public class GraphEnterFrame extends JFrame
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 graphPanel.repaint();
             }
+
+            removeEdges = false;
         }
     }
 
     public void mouseDragged(MouseEvent e) {
-        if (!btnAddEdgePressed && !btnDelEdgePressed) {
+        if (!btnAddEdgePressed && !btnDelEdgePressed && !btnDelPressed) {
             Object source = e.getSource();
             VertexPanel vertex = (VertexPanel) source;
             int count = Integer.parseInt(vertex.getName());

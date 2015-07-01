@@ -1,13 +1,13 @@
 package Graph;
 
 public class Vertex {
-    public Character name;
+    public Character letter;
     public int coordX;
     public int coordY;
 
-    public Vertex(int x, int y, Character name_) {
+    public Vertex(int x, int y, Character letter_) {
         coordX = x;
         coordY = y;
-        name = name_;
+        letter = letter_;
     }
 }

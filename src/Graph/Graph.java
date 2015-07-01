@@ -43,9 +43,9 @@ public class Graph {
         for (int i = 0; i < numberOfVertices; ++i)
             for (int j = 0; j < numberOfVertices; ++j)
                 if (linksMatrix[i][j])
-                    return false;         // no edges
+                    return false;
 
-        return true;
+        return true;    // no edges
     }
 
     public boolean isCreated() {         // is graph created
@@ -101,7 +101,7 @@ public class Graph {
         }
 
         // create edges
-        edges = new ArrayList<>(numberOfVertices);
+        edges = new ArrayList<>();
         for (int i = 0; i < numberOfVertices; ++i)
             for (int j = i; j < numberOfVertices; ++j)
                 if (adjacencyMatrix[i][j] != 0) {
@@ -222,7 +222,35 @@ public class Graph {
         return false;  // graph is not created
     }
 
+    private boolean isNullRow(int[][] mm, int index){
+        for(int i = 0; i < 10; ++i)
+            if (mm[index][i] != 0)
+                return false;
+
+        for (int i = 0; i < vertices.size(); i++)
+            if (vertices.get(i).letter == Graph.alphabet[index])
+                return false;
+
+        return true;
+    }
+
+    public void removePheromone() {
+        for (Edge i : edges)
+            i.pheromone = 0;
+    }
+
     public void createMatrixFromEdgesAndVertices() {
+        int[][] adjacencyMatrixTmp = new int[10][10];
+
+        for (int i = 0; i < 10; ++i)
+            for (int j = 0; j < 10; ++j)
+                adjacencyMatrixTmp[i][j] = 0;
+
+        for (Edge i : edges) {
+            adjacencyMatrixTmp[i.firstNode][i.secondNode] = i.weight;
+            adjacencyMatrixTmp[i.secondNode][i.firstNode] = i.weight;
+        }
+
         adjacencyMatrix = new int[numberOfVertices][numberOfVertices];
         linksMatrix = new boolean[numberOfVertices][numberOfVertices];
 
@@ -232,13 +260,41 @@ public class Graph {
                 linksMatrix[i][j] = false;
             }
 
-        for (Edge i : edges) {
-            adjacencyMatrix[i.firstNode][i.secondNode] = i.weight;
-            adjacencyMatrix[i.secondNode][i.firstNode] = i.weight;
-            linksMatrix[i.firstNode][i.secondNode] = true;
-            linksMatrix[i.secondNode][i.firstNode] = true;
+        int[] mass = new int[numberOfVertices];
+
+        int ind = 0;
+
+        for (int i = 0; i < 10; ++i)
+            if (!isNullRow(adjacencyMatrixTmp, i))
+                    mass[ind++] = i;
+
+        int indexI = 0, indexJ = 0;
+        for (int i = 0; i < 10; i++) {
+            if (isNullRow(adjacencyMatrixTmp, i))
+                continue;
+
+            for ( int j : mass) {
+                adjacencyMatrix[indexI][indexJ] = adjacencyMatrixTmp[i][j];
+                indexJ++;
+            }
+            indexJ = 0;
+            indexI++;
         }
 
+        for (int i = 0; i < numberOfVertices; ++i)
+            for (int j = 0; j < numberOfVertices; ++j) {
+                if (adjacencyMatrix[i][j] != 0)
+                    linksMatrix[i][j] = true;
+            }
+
         makeWarshallAlgorithm();
+
+        // create edges
+        edges = new ArrayList<>();
+        for (int i = 0; i < numberOfVertices; ++i)
+            for (int j = i; j < numberOfVertices; ++j)
+                if (adjacencyMatrix[i][j] != 0) {
+                    edges.add(new Edge(adjacencyMatrix[i][j], i, j));
+                }
     }
 }
