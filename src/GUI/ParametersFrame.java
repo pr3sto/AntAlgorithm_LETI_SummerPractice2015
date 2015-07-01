@@ -360,10 +360,23 @@ public class ParametersFrame extends JFrame
         JLabel numberOfRandomAntsLabel = new JLabel("Количество \"Блиц\" муравьев: ");
         numberOfRandomAntsLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         numberOfRandomAntsLabel.setBounds(20, 115, 210, 40);
-        paramsPanel.add(numberOfRandomAntsLabel);
+        paramsPanel.add(numberOfRandomAntsLabel);              
         // слайдер - количество блиц муравьев
-        JSlider numberOfRandomAntsSlider = new JSlider(JSlider.HORIZONTAL, 10, 100, antParams.first);
-        numberOfRandomAntsSlider.setBounds(310, 125, 425, 40);
+        JSlider numberOfRandomAntsSlider = new JSlider(JSlider.HORIZONTAL, 1, 101, antParams.first+1);
+        numberOfRandomAntsSlider.setBounds(310, 120, 425, 40);
+        Hashtable<Integer, JLabel> table = new Hashtable<Integer, JLabel>();
+        table.put (1, new JLabel("1"));
+        table.put (11, new JLabel("10"));
+        table.put (21, new JLabel("20"));
+        table.put (31, new JLabel("30"));
+        table.put (41, new JLabel("40"));
+        table.put (51, new JLabel("50"));
+        table.put (61, new JLabel("60"));
+        table.put (71, new JLabel("70"));
+        table.put (81, new JLabel("80"));
+        table.put (91, new JLabel("90"));
+        table.put (101, new JLabel("100"));
+        numberOfRandomAntsSlider.setLabelTable(table);
         numberOfRandomAntsSlider.setMajorTickSpacing(10);
         numberOfRandomAntsSlider.setMinorTickSpacing(5);
         numberOfRandomAntsSlider.setPaintTicks(true);
@@ -380,8 +393,21 @@ public class ParametersFrame extends JFrame
         numberOfAntsLabel.setBounds(20, 165, 210, 40);
         paramsPanel.add(numberOfAntsLabel);
         // слайдер - общее количество муравьев
-        JSlider numberOfAntsSlider = new JSlider(JSlider.HORIZONTAL, 1000, 10000, antParams.second);
-        numberOfAntsSlider.setBounds(305, 175, 435, 40);
+        JSlider numberOfAntsSlider = new JSlider(JSlider.HORIZONTAL, 10, 10010, antParams.second+10);
+        numberOfAntsSlider.setBounds(305, 165, 435, 40);
+        Hashtable<Integer, JLabel> table1 = new Hashtable<Integer, JLabel>();
+        table1.put (10, new JLabel("10"));
+        table1.put (1010, new JLabel("1000"));
+        table1.put (2010, new JLabel("2000"));
+        table1.put (3010, new JLabel("3000"));
+        table1.put (4010, new JLabel("4000"));
+        table1.put (5010, new JLabel("5000"));
+        table1.put (6010, new JLabel("6000"));
+        table1.put (7010, new JLabel("7000"));
+        table1.put (8010, new JLabel("8000"));
+        table1.put (9010, new JLabel("9000"));
+        table1.put (10010, new JLabel("10000"));
+        numberOfAntsSlider.setLabelTable(table1);
         numberOfAntsSlider.setMajorTickSpacing(1000);
         numberOfAntsSlider.setMinorTickSpacing(500);
         numberOfAntsSlider.setPaintTicks(true);
@@ -392,7 +418,6 @@ public class ParametersFrame extends JFrame
         numberOfAntsSlider.setName("NumberOfAntsSlider");
         numberOfAntsSlider.addChangeListener(this);
         paramsPanel.add(numberOfAntsSlider);
-
 
         // кнопки
         JButton backButton = new JButton("В главное меню");
@@ -497,7 +522,10 @@ public class ParametersFrame extends JFrame
                 break;
 
             case "NumberOfRandomAntsSlider":
-                antParams.first = slider.getValue();
+                if (slider.getValue() == 1) 
+                	antParams.first = slider.getValue();
+                else
+                	antParams.first = slider.getValue()-1;
                 break;
 
             case "NumberOfAntsSlider":

@@ -36,6 +36,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
 
     // путь муравья
     private JLabel pathOfAntLabel;
+    private JLabel pathOfAntTextLabel;
 
     GraphPanel graphPanel;
 
@@ -186,7 +187,7 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         antPathPanel.setBorder(pathPanelTitle);
         add(antPathPanel);
 
-        JLabel pathOfAntTextLabel = new JLabel("Найденный путь: ");
+        pathOfAntTextLabel = new JLabel();
         pathOfAntTextLabel.setHorizontalAlignment(JLabel.CENTER);
         pathOfAntTextLabel.setFont(new Font("Arial", Font.BOLD, 14));
         pathOfAntTextLabel.setBounds(20, 10, 250, 30);
@@ -346,6 +347,30 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
 
         path += "<br>Вес пути: " + String.valueOf(weight) + "</p><html>";
 
+        pathOfAntTextLabel.setText("Найденный путь: ");
+        pathOfAntLabel.setText(path);
+    }
+    
+    private void showAnt(List<Integer> pathOfAnt) {
+    	String path = "<html><p align=\"center\">";
+    	
+    	int weight = pathOfAnt.get(pathOfAnt.size()-1);
+    	pathOfAnt.remove(pathOfAnt.size() - 1);
+
+        for (Integer i : pathOfAnt) {
+            if (!path.equals("<html><p align=\"center\">")) path += " - ";
+            path += graph.vertices.get(i).letter;
+        }
+
+        path += "<br>Вес пути: " + String.valueOf(weight) + "</p><html>";
+
+        if (algorithm.getCount() <= antParams.first)
+        	pathOfAntTextLabel.setText("\"Блиц\" муравей " 
+        			+ algorithm.getCount() + ". Путь: ");
+        else
+        	pathOfAntTextLabel.setText("Муравей " 
+        			+ algorithm.getCount() + ". Путь: ");
+        	
         pathOfAntLabel.setText(path);
     }
 
@@ -392,7 +417,10 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                         nextStepButton.setEnabled(false);
                         List<Integer> pathOfAnt = algorithm.findPath();
                         showPathOfAnt(pathOfAnt);
-                    } else algorithm.step();
+                    } else {
+                    	List<Integer> pathOfAnt = algorithm.step();
+                    	showAnt(pathOfAnt);
+                    }
 
                     graphPanel.repaint();
                     break;
@@ -402,13 +430,14 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                     autoStepButton.setEnabled(false);
                     nextStepButton.setEnabled(false);
                     List<Integer> pathOfAnt = algorithm.autoAlgorithm();
-                    graphPanel.repaint();
                     showPathOfAnt(pathOfAnt);
+                    graphPanel.repaint();
                     break;
 
                 case "ClearButton":
                     enableComboBoxes();
                     pathOfAntLabel.setText("");
+                    pathOfAntTextLabel.setText("");
                     autoStepButton.setEnabled(true);
                     nextStepButton.setEnabled(true);
                     setAlgorithm();
