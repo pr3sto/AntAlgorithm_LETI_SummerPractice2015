@@ -183,96 +183,97 @@ public class GraphEnterFrame extends JFrame
 
 
         // поток, обновляющий граф
-        Runnable r1 = () -> {
-            // задержка для прорисовки
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            while(!interrupt) {
-                int free = 0;
-
-                while (removeEdges) {
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                Graphics gr = graphPanel.getGraphics();
-
+        Runnable r1 = new Runnable() {
+            public void run() {
                 // задержка для прорисовки
-                if (counterEdgeMax == 1) {
-                    try {
-                        Thread.sleep(1);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
 
-                while (free < counterEdgeMax) {
-                    if (edges[free] != null) {
+                while (!interrupt) {
+                    int free = 0;
 
-                        int x1 = vertices[edges[free].first].getX() + 25;
-                        int y1 = vertices[edges[free].first].getY() + 25;
-                        int x2 = vertices[edges[free].second].getX() + 25;
-                        int y2 = vertices[edges[free].second].getY() + 25;
-
-                        int x11= (int)(x1 + 25 * (x2 - x1) /
-                                Math.sqrt(Math.pow((double)(x2 - x1), 2.0)
-                                        + Math.pow((double)(y2 - y1), 2.0)));
-
-                        int y11 = (int)(y1 + 25 * (y2 - y1) /
-                                Math.sqrt(Math.pow((double)(x2 - x1), 2.0)
-                                        + Math.pow((double)(y2 - y1), 2.0)));
-
-                        int x22 = (int)(x2 + 25 * (x1 - x2) /
-                                Math.sqrt(Math.pow((double)(x1 - x2), 2.0)
-                                        + Math.pow((double)(y1 - y2), 2.0)));
-
-                        int y22 = (int)(y2 + 25 * (y1 - y2) /
-                                Math.sqrt(Math.pow((double)(x1 - x2), 2.0)
-                                        + Math.pow((double)(y1 - y2), 2.0)));
-
-                        gr.setColor(Color.BLACK);
-                        gr.drawLine(x11, y11, x22, y22);
-
-                        int centerX = (int)(x1 + 50 * (x2 - x1) /
-                                Math.sqrt(Math.pow((double)(x2 - x1), 2.0)
-                                        + Math.pow((double)(y2 - y1), 2.0)));
-
-                        int centerY = (int)(y1 + 50 * (y2 - y1) /
-                                Math.sqrt(Math.pow((double)(x2 - x1), 2.0)
-                                        + Math.pow((double)(y2 - y1), 2.0)));
-
-                        gr.setFont(new Font("Arial", Font.BOLD, 15));
-                        gr.setColor(Color.RED);
-                        gr.drawString(Integer.toString(weights[free]), centerX, centerY);
+                    while (removeEdges) {
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
 
-                    free++;
+                    Graphics gr = graphPanel.getGraphics();
+
+                    // задержка для прорисовки
+                    if (counterEdgeMax == 1) {
+                        try {
+                            Thread.sleep(1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    while (free < counterEdgeMax) {
+                        if (edges[free] != null) {
+
+                            int x1 = vertices[edges[free].first].getX() + 25;
+                            int y1 = vertices[edges[free].first].getY() + 25;
+                            int x2 = vertices[edges[free].second].getX() + 25;
+                            int y2 = vertices[edges[free].second].getY() + 25;
+
+                            int x11 = (int) (x1 + 25 * (x2 - x1) /
+                                    Math.sqrt(Math.pow((double) (x2 - x1), 2.0)
+                                            + Math.pow((double) (y2 - y1), 2.0)));
+
+                            int y11 = (int) (y1 + 25 * (y2 - y1) /
+                                    Math.sqrt(Math.pow((double) (x2 - x1), 2.0)
+                                            + Math.pow((double) (y2 - y1), 2.0)));
+
+                            int x22 = (int) (x2 + 25 * (x1 - x2) /
+                                    Math.sqrt(Math.pow((double) (x1 - x2), 2.0)
+                                            + Math.pow((double) (y1 - y2), 2.0)));
+
+                            int y22 = (int) (y2 + 25 * (y1 - y2) /
+                                    Math.sqrt(Math.pow((double) (x1 - x2), 2.0)
+                                            + Math.pow((double) (y1 - y2), 2.0)));
+
+                            gr.setColor(Color.BLACK);
+                            gr.drawLine(x11, y11, x22, y22);
+
+                            int centerX = (int) (x1 + 50 * (x2 - x1) /
+                                    Math.sqrt(Math.pow((double) (x2 - x1), 2.0)
+                                            + Math.pow((double) (y2 - y1), 2.0)));
+
+                            int centerY = (int) (y1 + 50 * (y2 - y1) /
+                                    Math.sqrt(Math.pow((double) (x2 - x1), 2.0)
+                                            + Math.pow((double) (y2 - y1), 2.0)));
+
+                            gr.setFont(new Font("Arial", Font.BOLD, 15));
+                            gr.setColor(Color.RED);
+                            gr.drawString(Integer.toString(weights[free]), centerX, centerY);
+                        }
+
+                        free++;
+                    }
+
+                    if (counterVerMax == 10)
+                        btnAdd.setEnabled(false);
+
+                    if (counterVerMax == 0)
+                        btnDel.setEnabled(false);
+                    else
+                        btnDel.setEnabled(true);
+
+                    if ((counterEdge == (counterVerMax * (counterVerMax - 1) / 2)) || (counterVerMax < 2))
+                        btnAddEdge.setEnabled(false);
+                    else
+                        btnAddEdge.setEnabled(true);
+
+                    if (counterEdge < 1)
+                        btnDelEdge.setEnabled(false);
                 }
-
-                if (counterVerMax == 10)
-                    btnAdd.setEnabled(false);
-
-                if (counterVerMax == 0)
-                    btnDel.setEnabled(false);
-                else
-                    btnDel.setEnabled(true);
-
-                if ((counterEdge == (counterVerMax*(counterVerMax - 1) / 2)) || (counterVerMax < 2))
-                    btnAddEdge.setEnabled(false);
-                else
-                    btnAddEdge.setEnabled(true);
-
-                if(counterEdge < 1)
-                    btnDelEdge.setEnabled(false);
-            }
-        };
+            }};
 
         // запуск потока рисовки графа
         Thread t1 = new Thread(r1);

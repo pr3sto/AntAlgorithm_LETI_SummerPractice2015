@@ -53,14 +53,11 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
         final  BasicStroke stroke_7 = new BasicStroke(7.0f);
         final  BasicStroke stroke_5 = new BasicStroke(5.0f);
         final  BasicStroke stroke_11 = new BasicStroke(11.0f);
-        final  BasicStroke wideStroke = new BasicStroke(8.0f);
 
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
 
             Graphics2D g2 = (Graphics2D)g;
-
-            //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             // вершины
             for (int i = 0; i < graph.numberOfVertices; i++) {
@@ -104,26 +101,8 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                 g2.setColor(Color.white);
                 g2.drawLine(x11, y11, x22, y22);
 
-
-                   /* double maxPheromone = 0.0;
-                for (Edge e : graph.edges)
-                    //maxPheromone += e.pheromone;
-                    maxPheromone = Math.max(maxPheromone, e.pheromone);
-
-                int green;
-                int blue;
-
-                if (maxPheromone == 0.0) {
-                    green = 255;
-                    blue = 255;
-                } else {
-                    green = (int)((graph.edges.get(i).pheromone <= maxPheromone / 2.0) ? 255.0 : 255.0 - graph.edges.get(i).pheromone / maxPheromone * 255.0);
-                    blue = (int)((graph.edges.get(i).pheromone >= maxPheromone / 2.0) ? 0.0 : 255.0 - graph.edges.get(i).pheromone / maxPheromone * 255.0);
-                }*/
-
                 int maxWeight = 0;
                 for (Edge e : graph.edges)
-                    //maxPheromone += e.pheromone;
                     maxWeight = Math.max(maxWeight, e.weight);
 
 
@@ -135,8 +114,6 @@ public class AlgorithmFrame extends JFrame implements ActionListener {
                 g2.setStroke(stroke_3);
                 g2.setColor(new Color(255, green, blue));
                 g2.drawLine(x11, y11, x22, y22);
-
-                System.out.println("g " + green + " b " + blue + "pher " + graph.edges.get(i).pheromone);
 
                 int x= (int)(x1 + 70 * (x2 - x1) /
                         Math.sqrt(Math.pow((double)(x2 - x1), 2.0)

@@ -1,6 +1,5 @@
 package GUI;
 
-import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -9,11 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
 
-import Algorithm.AntAlgorithm;
 import Graph.Graph;
-import Staff.Pair;
 
-// окно "алгоритм"
 public class ShowGraphFrame extends JFrame implements ActionListener {
 
     private final ParametersFrame parametersFrame; // ссылка на окно-родитель
