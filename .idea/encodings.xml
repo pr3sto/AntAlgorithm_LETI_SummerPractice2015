@@ -2,7 +2,9 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/src/GUI/AlgorithmFrame.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/GUI/GraphEnter/GraphEnterFrame.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/GUI/InfoFrame.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/GUI/ParametersFrame.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/GUI/ShowGraphFrame.java" charset="UTF-8" />
   </component>
 </project>

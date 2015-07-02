@@ -152,7 +152,7 @@ public class MainMenuFrame extends JFrame implements ActionListener {
     // main
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater( new Runnable() {
             public void run() {
                 // изменить стиль окна
                 try {
@@ -164,7 +164,6 @@ public class MainMenuFrame extends JFrame implements ActionListener {
 
                 // показать главное окно
                 new MainMenuFrame();
-            }
-        });
+            }});
     }
 }
